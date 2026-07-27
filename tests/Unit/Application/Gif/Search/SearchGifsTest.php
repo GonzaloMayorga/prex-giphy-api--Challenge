@@ -111,7 +111,7 @@ final class SearchGifsTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            'Offset cannot be negative.'
+            'Offset must be between 0 and 4999.'
         );
 
         new SearchGifsInput(
@@ -119,6 +119,32 @@ final class SearchGifsTest extends TestCase
             offset: -1,
         );
     }
+
+    public function test_it_rejects_an_offset_greater_than_4999(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'Offset must be between 0 and 4999.'
+        );
+
+        new SearchGifsInput(
+            query: 'cats',
+            offset: 5000,
+        );
+    }
+
+    public function test_it_rejects_a_query_longer_than_fifty_characters(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'Query cannot exceed 50 characters.'
+        );
+
+        new SearchGifsInput(
+            query: str_repeat('a', 51),
+        );
+    }
+    
 
 }
 

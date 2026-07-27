@@ -10,7 +10,8 @@ final readonly class SearchGifsInput
     private const DEFAULT_LIMIT = 10;
     private const DEFAULT_OFFSET = 0;
     private const MAX_LIMIT = 50;
-    private const MAX_QUERY_LENGTH = 255;
+    private const MAX_OFFSET = 4999;
+    private const MAX_QUERY_LENGTH = 50;
 
     public string $query;
     public int $limit;
@@ -33,8 +34,8 @@ final readonly class SearchGifsInput
             throw new InvalidArgumentException('Limit must be between 1 and ' . self::MAX_LIMIT . '.');
         }
 
-        if($resolvedOffset < 0){
-            throw new InvalidArgumentException('Offset cannot be negative.');
+        if($resolvedOffset < 0 || $resolvedOffset > self::MAX_OFFSET){
+            throw new InvalidArgumentException('Offset must be between 0 and ' . self::MAX_OFFSET . '.');
         }
 
         $this->query = $normalizedQuery;
