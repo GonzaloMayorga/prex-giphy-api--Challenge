@@ -8,6 +8,7 @@ use App\Application\Auth\Login\Login;
 use App\Application\Auth\Login\LoginInput;
 use App\Infrastructure\Http\Requests\Auth\LoginRequest;
 use App\Infrastructure\Http\Resources\Auth\LoginResource;
+use App\Infrastructure\Audit\Http\AuditContext;
 
 final readonly class LoginController
 {
@@ -26,6 +27,10 @@ final readonly class LoginController
                 email: (string) $validated['email'],
                 password: (string) $validated['password'],
             )
+        );
+        $request->attributes->set(
+            AuditContext::USER_ID,
+            $result->user()->id(),
         );
 
         return new LoginResource($result);

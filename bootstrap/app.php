@@ -17,6 +17,7 @@ use Illuminate\Auth\AuthenticationException;
 use App\Domain\Favorite\Exceptions\FavoriteGifAlreadyExistsException;
 use App\Domain\Favorite\Exceptions\FavoriteGifOwnershipException;
 use App\Domain\Favorite\Exceptions\FavoriteGifRepositoryException;
+use App\Infrastructure\Http\Middleware\AuditApiInteractionMiddleware;
 
 return Application::configure(
     basePath: dirname(__DIR__)
@@ -29,6 +30,11 @@ return Application::configure(
     )
     ->withMiddleware(
         function (Middleware $middleware): void {
+            $middleware->api(
+                append: [
+                    AuditApiInteractionMiddleware::class,
+                ],
+            );
         }
     )
     ->withExceptions(

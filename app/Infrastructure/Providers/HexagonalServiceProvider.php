@@ -17,6 +17,9 @@ use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
 use App\Domain\Favorite\Ports\FavoriteGifRepository;
 use App\Infrastructure\Favorite\Eloquent\EloquentFavoriteGifRepository;
+use App\Domain\Audit\Ports\ApiInteractionRepository;
+use App\Infrastructure\Audit\Eloquent\EloquentApiInteractionRepository;
+use App\Infrastructure\Audit\Security\SensitiveDataRedactor;
 
 final class HexagonalServiceProvider extends ServiceProvider
 {
@@ -25,6 +28,7 @@ final class HexagonalServiceProvider extends ServiceProvider
         $this->registerGifProvider();
         $this->registerAuthentication();
         $this->registerFavoriteRepository();
+        $this->registerAudit();
     }
 
     public function boot(): void
@@ -94,6 +98,33 @@ final class HexagonalServiceProvider extends ServiceProvider
         $this->app->bind(
             FavoriteGifRepository::class,
             EloquentFavoriteGifRepository::class,
+        );
+    }
+    private function registerAudit(): void
+    {
+        $this->app->bind(
+            ApiInteractionRepository::class,
+            EloquentApiInteractionRepository::class,
+        );
+
+        $this->app->singleton(
+            SensitiveDataRedactor::class,
+            function (): SensitiveDataRedactor {
+                $sensitiveKeys = config(
+                    'audit.sensitive_keys',
+                    [],
+                );
+
+                return new SensitiveDataRedactor(
+                    sensitiveKeys: is_array($sensitiveKeys)
+                        ? array_values($sensitiveKeys)
+                        : [],
+                    replacement: (string) config(
+                        'audit.redacted_value',
+                        '[REDACTED]',
+                    ),
+                );
+            },
         );
     }
 }
