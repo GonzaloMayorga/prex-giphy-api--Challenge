@@ -14,6 +14,9 @@ use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Domain\Auth\Exceptions\InvalidCredentialsException;
 use Illuminate\Auth\AuthenticationException;
+use App\Domain\Favorite\Exceptions\FavoriteGifAlreadyExistsException;
+use App\Domain\Favorite\Exceptions\FavoriteGifOwnershipException;
+use App\Domain\Favorite\Exceptions\FavoriteGifRepositoryException;
 
 return Application::configure(
     basePath: dirname(__DIR__)
@@ -97,6 +100,24 @@ return Application::configure(
 
             $exceptions->render(
                 function (
+                    FavoriteGifOwnershipException $exception,
+                    Request $request,
+                ): ?JsonResponse {
+                    if (!$request->is('api', 'api/*')) {
+                        return null;
+                    }
+
+                    return response()->json([
+                        'message' => 'You cannot save favorites for another user.',
+                        'error' => [
+                            'code' => 'FAVORITE_USER_FORBIDDEN',
+                        ],
+                    ], 403);
+                }
+            );
+
+            $exceptions->render(
+                function (
                     GifNotFoundException $exception,
                     Request $request,
                 ): ?JsonResponse {
@@ -110,6 +131,42 @@ return Application::configure(
                             'code' => 'GIF_NOT_FOUND',
                         ],
                     ], 404);
+                }
+            );
+
+            $exceptions->render(
+                function (
+                    FavoriteGifAlreadyExistsException $exception,
+                    Request $request,
+                ): ?JsonResponse {
+                    if (!$request->is('api', 'api/*')) {
+                        return null;
+                    }
+
+                    return response()->json([
+                        'message' => 'The GIF is already saved as a favorite.',
+                        'error' => [
+                            'code' => 'FAVORITE_GIF_ALREADY_EXISTS',
+                        ],
+                    ], 409);
+                }
+            );
+
+            $exceptions->render(
+                function (
+                    FavoriteGifRepositoryException $exception,
+                    Request $request,
+                ): ?JsonResponse {
+                    if (!$request->is('api', 'api/*')) {
+                        return null;
+                    }
+
+                    return response()->json([
+                        'message' => 'The favorite could not be stored.',
+                        'error' => [
+                            'code' => 'FAVORITE_STORAGE_ERROR',
+                        ],
+                    ], 500);
                 }
             );
 

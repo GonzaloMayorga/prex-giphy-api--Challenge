@@ -15,6 +15,8 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Client\Factory;
 use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
+use App\Domain\Favorite\Ports\FavoriteGifRepository;
+use App\Infrastructure\Favorite\Eloquent\EloquentFavoriteGifRepository;
 
 final class HexagonalServiceProvider extends ServiceProvider
 {
@@ -22,6 +24,7 @@ final class HexagonalServiceProvider extends ServiceProvider
     {
         $this->registerGifProvider();
         $this->registerAuthentication();
+        $this->registerFavoriteRepository();
     }
 
     public function boot(): void
@@ -83,6 +86,14 @@ final class HexagonalServiceProvider extends ServiceProvider
                     ttlSeconds: $ttlMinutes * 60,
                 );
             },
+        );
+    }
+
+    private function registerFavoriteRepository(): void
+    {
+        $this->app->bind(
+            FavoriteGifRepository::class,
+            EloquentFavoriteGifRepository::class,
         );
     }
 }

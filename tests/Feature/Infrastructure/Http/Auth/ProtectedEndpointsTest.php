@@ -61,6 +61,46 @@ final class ProtectedEndpointsTest extends TestCase
             $provider->receivedId
         );
     }
+
+    public function test_saving_a_favorite_requires_authentication(): void
+    {
+        $provider = new FakeGifProvider();
+        $repository = new \Tests\Fakes\Favorite\FakeFavoriteGifRepository();
+
+        $this->app->instance(
+            GifProvider::class,
+            $provider,
+        );
+
+        $this->app->instance(
+            \App\Domain\Favorite\Ports\FavoriteGifRepository::class,
+            $repository,
+        );
+
+        $response = $this->postJson(
+            '/api/favorites',
+            [
+                'gif_id' => 'abc123',
+                'alias' => 'My favorite',
+                'user_id' => 1,
+            ],
+        );
+
+        $response
+            ->assertUnauthorized()
+            ->assertJsonPath(
+                'error.code',
+                'UNAUTHENTICATED',
+            );
+
+        self::assertNull(
+            $provider->receivedId
+        );
+
+        self::assertNull(
+            $repository->receivedExistsUserId
+        );
+    }
 }
 
 ?>
