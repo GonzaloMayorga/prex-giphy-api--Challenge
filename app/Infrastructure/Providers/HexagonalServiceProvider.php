@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Providers;
 
+use App\Domain\Auth\Ports\AccessTokenIssuer;
+use App\Domain\Auth\Ports\CredentialsAuthenticator;
 use App\Domain\Gif\Ports\GifProvider;
+use App\Infrastructure\Auth\Eloquent\EloquentCredentialsAuthenticator;
+use App\Infrastructure\Auth\Passport\PassportAccessTokenIssuer;
 use App\Infrastructure\Gif\Giphy\GiphyApiAdapter;
 use App\Infrastructure\Gif\Giphy\GiphyGifMapper;
 use Illuminate\Contracts\Foundation\Application;
@@ -15,6 +19,16 @@ use InvalidArgumentException;
 final class HexagonalServiceProvider extends ServiceProvider
 {
     public function register(): void
+    {
+        $this->registerGifProvider();
+        $this->registerAuthentication();
+    }
+
+    public function boot(): void
+    {
+    }
+
+    private function registerGifProvider(): void
     {
         $this->app->bind(
             GifProvider::class,
@@ -50,7 +64,25 @@ final class HexagonalServiceProvider extends ServiceProvider
         );
     }
 
-    public function boot(): void
+    private function registerAuthentication(): void
     {
+        $this->app->bind(
+            CredentialsAuthenticator::class,
+            EloquentCredentialsAuthenticator::class,
+        );
+
+        $this->app->bind(
+            AccessTokenIssuer::class,
+            function (): AccessTokenIssuer {
+                $ttlMinutes = (int) config(
+                    'auth_tokens.access_token_ttl_minutes',
+                    30,
+                );
+
+                return new PassportAccessTokenIssuer(
+                    ttlSeconds: $ttlMinutes * 60,
+                );
+            },
+        );
     }
 }

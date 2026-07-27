@@ -25,3 +25,7 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Laravel Passport encryption keys
+/storage/oauth-private.key
+/storage/oauth-public.key

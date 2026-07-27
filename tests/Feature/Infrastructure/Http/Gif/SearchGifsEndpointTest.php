@@ -9,9 +9,20 @@ use App\Domain\Gif\Exceptions\GifProviderException;
 use App\Domain\Gif\Ports\GifProvider;
 use Tests\Fakes\Gif\FakeGifProvider;
 use Tests\TestCase;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Passport\Passport;
 
 final class SearchGifsEndpointTest extends TestCase
 {
+    use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+     parent::setUp();
+
+     Passport::actingAs(User::factory()->create());
+    }
     public function test_it_returns_gif_search_results(): void
     {
         $gif = new Gif(

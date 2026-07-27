@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use App\Domain\Auth\Exceptions\InvalidCredentialsException;
+use Illuminate\Auth\AuthenticationException;
 
 return Application::configure(
     basePath: dirname(__DIR__)
@@ -54,6 +56,42 @@ return Application::configure(
                             'details' => $exception->errors(),
                         ],
                     ], 422);
+                }
+            );
+            
+            $exceptions->render(
+                function (
+                    InvalidCredentialsException $exception,
+                    Request $request,
+                ): ?JsonResponse {
+                    if (!$request->is('api', 'api/*')) {
+                        return null;
+                    }
+
+                    return response()->json([
+                        'message' => 'The provided credentials are invalid.',
+                        'error' => [
+                            'code' => 'INVALID_CREDENTIALS',
+                        ],
+                    ], 401);
+                }
+            );
+
+            $exceptions->render(
+                function (
+                    AuthenticationException $exception,
+                    Request $request,
+                ): ?JsonResponse {
+                    if (!$request->is('api', 'api/*')) {
+                        return null;
+                    }
+
+                    return response()->json([
+                        'message' => 'Authentication is required to access this resource.',
+                        'error' => [
+                            'code' => 'UNAUTHENTICATED',
+                        ],
+                    ], 401);
                 }
             );
 
