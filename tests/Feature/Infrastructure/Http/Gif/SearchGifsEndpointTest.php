@@ -7,11 +7,11 @@ namespace Tests\Feature\Infrastructure\Http\Gif;
 use App\Domain\Gif\Entities\Gif;
 use App\Domain\Gif\Exceptions\GifProviderException;
 use App\Domain\Gif\Ports\GifProvider;
-use Tests\Fakes\Gif\FakeGifProvider;
-use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
+use Tests\Fakes\Gif\FakeGifProvider;
+use Tests\TestCase;
 
 final class SearchGifsEndpointTest extends TestCase
 {
@@ -19,10 +19,11 @@ final class SearchGifsEndpointTest extends TestCase
 
     protected function setUp(): void
     {
-     parent::setUp();
+        parent::setUp();
 
-     Passport::actingAs(User::factory()->create());
+        Passport::actingAs(User::factory()->create());
     }
+
     public function test_it_returns_gif_search_results(): void
     {
         $gif = new Gif(
@@ -33,7 +34,7 @@ final class SearchGifsEndpointTest extends TestCase
             username: 'cat-user',
         );
 
-        $provider = new FakeGifProvider();
+        $provider = new FakeGifProvider;
         $provider->willReturnSearchResults([$gif]);
 
         $this->bindProvider($provider);
@@ -86,7 +87,7 @@ final class SearchGifsEndpointTest extends TestCase
 
     public function test_it_uses_default_pagination_values(): void
     {
-        $provider = new FakeGifProvider();
+        $provider = new FakeGifProvider;
         $provider->willReturnSearchResults([]);
 
         $this->bindProvider($provider);
@@ -120,7 +121,7 @@ final class SearchGifsEndpointTest extends TestCase
 
     public function test_it_rejects_a_missing_query(): void
     {
-        $provider = new FakeGifProvider();
+        $provider = new FakeGifProvider;
 
         $this->bindProvider($provider);
 
@@ -151,7 +152,7 @@ final class SearchGifsEndpointTest extends TestCase
 
     public function test_it_rejects_an_invalid_limit(): void
     {
-        $provider = new FakeGifProvider();
+        $provider = new FakeGifProvider;
 
         $this->bindProvider($provider);
 
@@ -176,7 +177,7 @@ final class SearchGifsEndpointTest extends TestCase
 
     public function test_it_rejects_an_invalid_offset(): void
     {
-        $provider = new FakeGifProvider();
+        $provider = new FakeGifProvider;
 
         $this->bindProvider($provider);
 
@@ -201,7 +202,7 @@ final class SearchGifsEndpointTest extends TestCase
 
     public function test_it_returns_bad_gateway_when_the_provider_fails(): void
     {
-        $provider = new FakeGifProvider();
+        $provider = new FakeGifProvider;
 
         $provider->willFailSearchWith(
             GifProviderException::requestFailed(

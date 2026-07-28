@@ -56,5 +56,3 @@ final class ApiInteractionModel extends Model
         );
     }
 }
-
-?>

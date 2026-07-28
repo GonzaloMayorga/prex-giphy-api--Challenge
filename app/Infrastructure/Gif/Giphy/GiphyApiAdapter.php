@@ -22,20 +22,20 @@ final readonly class GiphyApiAdapter implements GifProvider
         private string $apiKey,
         private int $timeoutSeconds,
         private int $connectTimeoutSeconds,
-    ){
-        if(trim($this->baseUrl) === ''){
+    ) {
+        if (trim($this->baseUrl) === '') {
             throw new InvalidArgumentException('The GIPHY base URL cannot be empty.');
         }
 
-        if(trim($this->apiKey) === ''){
+        if (trim($this->apiKey) === '') {
             throw new InvalidArgumentException('The GIPHY API key cannot be empty.');
         }
 
-        if($this->timeoutSeconds < 1){
+        if ($this->timeoutSeconds < 1) {
             throw new InvalidArgumentException('The GIPHY timeout must be greater than zero.');
         }
 
-        if($this->connectTimeoutSeconds < 1){
+        if ($this->connectTimeoutSeconds < 1) {
             throw new InvalidArgumentException('The GIPHY connection timeout must be greater than zero.');
         }
     }
@@ -62,13 +62,13 @@ final readonly class GiphyApiAdapter implements GifProvider
         $this->ensureNotSyntheticResponse($payload);
 
         $data = $payload['data'] ?? null;
-        if (!is_array($data)) {
+        if (! is_array($data)) {
             throw GifProviderException::invalidResponse('The "data" field must be an array.');
         }
 
         $gifs = [];
         foreach ($data as $index => $item) {
-            if (!is_array($item)){
+            if (! is_array($item)) {
                 throw GifProviderException::invalidResponse(
                     sprintf('the item at index %s must be an object.', (string) $index)
                 );
@@ -77,7 +77,7 @@ final readonly class GiphyApiAdapter implements GifProvider
             try {
                 $gifs[] = $this->mapper->fromArray($item);
             } catch (
-                UnexpectedValueException | InvalidArgumentException $e
+                UnexpectedValueException|InvalidArgumentException $e
             ) {
                 throw GifProviderException::invalidResponse(
                     reason: sprintf('the GIF at index %s could not be mapped.', (string) $index),
@@ -91,7 +91,7 @@ final readonly class GiphyApiAdapter implements GifProvider
 
     public function getById(string $id): ?Gif
     {
-      try {
+        try {
             $response = $this->request()->get(
                 $this->url(
                     sprintf(
@@ -124,7 +124,7 @@ final readonly class GiphyApiAdapter implements GifProvider
             return null;
         }
 
-        if (!is_array($data)) {
+        if (! is_array($data)) {
             throw GifProviderException::invalidResponse(
                 'the "data" field must be an object.'
             );
@@ -133,7 +133,7 @@ final readonly class GiphyApiAdapter implements GifProvider
         try {
             return $this->mapper->fromArray($data);
         } catch (
-            UnexpectedValueException |
+            UnexpectedValueException|
             InvalidArgumentException $exception
         ) {
             throw GifProviderException::invalidResponse(
@@ -163,11 +163,11 @@ final readonly class GiphyApiAdapter implements GifProvider
             ltrim($path, '/'),
         );
     }
-   
+
     private function ensureSuccessfulResponse(
         Response $response,
     ): void {
-        if (!$response->failed()) {
+        if (! $response->failed()) {
             return;
         }
 
@@ -182,6 +182,7 @@ final readonly class GiphyApiAdapter implements GifProvider
                 : null,
         );
     }
+
     /**
      * @return array<string, mixed>
      */
@@ -190,7 +191,7 @@ final readonly class GiphyApiAdapter implements GifProvider
     ): array {
         $payload = $response->json();
 
-        if (!is_array($payload)) {
+        if (! is_array($payload)) {
             throw GifProviderException::invalidResponse(
                 'the response body is not a JSON object.'
             );
@@ -200,7 +201,7 @@ final readonly class GiphyApiAdapter implements GifProvider
     }
 
     /**
-     * @param array<string, mixed> $payload
+     * @param  array<string, mixed>  $payload
      */
     private function ensureNotSyntheticResponse(
         array $payload,
@@ -213,7 +214,7 @@ final readonly class GiphyApiAdapter implements GifProvider
             $status === 200
             && $responseId === ''
             && $data === []
-            && !array_key_exists('pagination', $payload);
+            && ! array_key_exists('pagination', $payload);
 
         if ($isSyntheticResponse) {
             throw GifProviderException::invalidResponse(
@@ -222,5 +223,3 @@ final readonly class GiphyApiAdapter implements GifProvider
         }
     }
 }
-
-?>

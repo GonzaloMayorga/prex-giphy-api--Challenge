@@ -23,7 +23,7 @@ final class AuditApiInteractionMiddlewareTest extends TestCase
             'audit.max_payload_bytes' => 1048576,
         ]);
 
-        $repository = new FakeApiInteractionRepository();
+        $repository = new FakeApiInteractionRepository;
 
         $middleware = new AuditApiInteractionMiddleware(
             recordInteraction: new RecordApiInteraction(
@@ -156,7 +156,7 @@ final class AuditApiInteractionMiddlewareTest extends TestCase
             'audit.enabled' => false,
         ]);
 
-        $repository = new FakeApiInteractionRepository();
+        $repository = new FakeApiInteractionRepository;
 
         $middleware = new AuditApiInteractionMiddleware(
             recordInteraction: new RecordApiInteraction(
@@ -199,5 +199,3 @@ final class AuditApiInteractionMiddlewareTest extends TestCase
         );
     }
 }
-
-?>

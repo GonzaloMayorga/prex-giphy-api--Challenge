@@ -12,9 +12,5 @@ final class AuditContext
     public const USER_ID =
         '_audit_user_id';
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 }
-
-?>

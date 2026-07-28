@@ -17,7 +17,7 @@ final class LoginEndpointTest extends TestCase
 {
     public function test_it_returns_an_access_token(): void
     {
-        $authenticator = new FakeCredentialsAuthenticator();
+        $authenticator = new FakeCredentialsAuthenticator;
         $authenticator->willAuthenticateAs(
             new AuthenticatedUser(
                 id: 10,
@@ -26,7 +26,7 @@ final class LoginEndpointTest extends TestCase
             )
         );
 
-        $tokenIssuer = new FakeAccessTokenIssuer();
+        $tokenIssuer = new FakeAccessTokenIssuer;
         $tokenIssuer->willIssue(
             new IssuedAccessToken(
                 accessToken: 'test-access-token',
@@ -75,10 +75,10 @@ final class LoginEndpointTest extends TestCase
 
     public function test_it_returns_unauthorized_for_invalid_credentials(): void
     {
-        $authenticator = new FakeCredentialsAuthenticator();
+        $authenticator = new FakeCredentialsAuthenticator;
         $authenticator->willAuthenticateAs(null);
 
-        $tokenIssuer = new FakeAccessTokenIssuer();
+        $tokenIssuer = new FakeAccessTokenIssuer;
 
         $this->bindAuthentication(
             $authenticator,
@@ -109,8 +109,8 @@ final class LoginEndpointTest extends TestCase
 
     public function test_it_validates_the_login_payload(): void
     {
-        $authenticator = new FakeCredentialsAuthenticator();
-        $tokenIssuer = new FakeAccessTokenIssuer();
+        $authenticator = new FakeCredentialsAuthenticator;
+        $tokenIssuer = new FakeAccessTokenIssuer;
 
         $this->bindAuthentication(
             $authenticator,
@@ -159,5 +159,3 @@ final class LoginEndpointTest extends TestCase
         );
     }
 }
-
-?>

@@ -9,8 +9,7 @@ use App\Domain\Auth\Ports\CredentialsAuthenticator;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-final class EloquentCredentialsAuthenticator implements
-    CredentialsAuthenticator
+final class EloquentCredentialsAuthenticator implements CredentialsAuthenticator
 {
     public function authenticate(
         string $email,
@@ -25,7 +24,7 @@ final class EloquentCredentialsAuthenticator implements
         }
 
         if (
-            !Hash::check(
+            ! Hash::check(
                 $password,
                 (string) $user->getAuthPassword(),
             )
@@ -50,5 +49,3 @@ final class EloquentCredentialsAuthenticator implements
         );
     }
 }
-
-?>

@@ -10,6 +10,7 @@ use InvalidArgumentException;
 final readonly class FavoriteGif
 {
     public const MAX_GIF_ID_LENGTH = 100;
+
     public const MAX_ALIAS_LENGTH = 100;
 
     private function __construct(
@@ -152,5 +153,3 @@ final readonly class FavoriteGif
             : trim($alias);
     }
 }
-
-?>

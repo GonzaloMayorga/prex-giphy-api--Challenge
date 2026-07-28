@@ -25,11 +25,10 @@ final readonly class AuditApiInteractionMiddleware
     public function __construct(
         private RecordApiInteraction $recordInteraction,
         private SensitiveDataRedactor $redactor,
-    ) {
-    }
+    ) {}
 
     /**
-     * @param Closure(Request): Response $next
+     * @param  Closure(Request): Response  $next
      */
     public function handle(
         Request $request,
@@ -49,11 +48,11 @@ final readonly class AuditApiInteractionMiddleware
         Request $request,
         Response $response,
     ): void {
-        if (!(bool) config('audit.enabled', true)) {
+        if (! (bool) config('audit.enabled', true)) {
             return;
         }
 
-        if (!$request->is('api', 'api/*')) {
+        if (! $request->is('api', 'api/*')) {
             return;
         }
 
@@ -112,7 +111,7 @@ final readonly class AuditApiInteractionMiddleware
         $user = $request->user('api')
             ?? $request->user();
 
-        if (!$user instanceof Authenticatable) {
+        if (! $user instanceof Authenticatable) {
             return null;
         }
 
@@ -219,8 +218,7 @@ final readonly class AuditApiInteractionMiddleware
     }
 
     /**
-     * @param array<string, mixed> $payload
-     *
+     * @param  array<string, mixed>  $payload
      * @return array<string, mixed>
      */
     private function sanitizeAndLimit(
@@ -230,7 +228,7 @@ final readonly class AuditApiInteractionMiddleware
             $payload
         );
 
-        if (!is_array($redacted)) {
+        if (! is_array($redacted)) {
             $redacted = [
                 'value' => $redacted,
             ];
@@ -243,7 +241,7 @@ final readonly class AuditApiInteractionMiddleware
             | JSON_PARTIAL_OUTPUT_ON_ERROR,
         );
 
-        if (!is_string($encoded)) {
+        if (! is_string($encoded)) {
             return [
                 '_serialization_error' => true,
             ];
@@ -330,12 +328,12 @@ final readonly class AuditApiInteractionMiddleware
             AuditContext::STARTED_AT_NANOSECONDS
         );
 
-        if (!is_int($startedAt)) {
+        if (! is_int($startedAt)) {
             return 0;
         }
 
         $elapsedNanoseconds = hrtime(true)
-            -$startedAt;
+            - $startedAt;
 
         return max(
             0,
@@ -345,4 +343,3 @@ final readonly class AuditApiInteractionMiddleware
         );
     }
 }
-?>

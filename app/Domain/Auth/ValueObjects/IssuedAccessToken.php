@@ -54,5 +54,3 @@ final readonly class IssuedAccessToken
         return $this->expiresAt;
     }
 }
-
-?>

@@ -12,7 +12,7 @@ final class GiphyGifMapperTest extends TestCase
 {
     public function test_it_maps_a_giphy_payload_to_a_gif(): void
     {
-        $mapper = new GiphyGifMapper();
+        $mapper = new GiphyGifMapper;
 
         $gif = $mapper->fromArray([
             'id' => 'abc123',
@@ -43,7 +43,7 @@ final class GiphyGifMapperTest extends TestCase
 
     public function test_it_uses_alt_text_when_title_is_empty(): void
     {
-        $mapper = new GiphyGifMapper();
+        $mapper = new GiphyGifMapper;
 
         $gif = $mapper->fromArray([
             'id' => 'abc123',
@@ -64,7 +64,7 @@ final class GiphyGifMapperTest extends TestCase
 
     public function test_it_uses_a_default_title_when_none_exists(): void
     {
-        $mapper = new GiphyGifMapper();
+        $mapper = new GiphyGifMapper;
 
         $gif = $mapper->fromArray([
             'id' => 'abc123',
@@ -83,7 +83,7 @@ final class GiphyGifMapperTest extends TestCase
 
     public function test_it_uses_fixed_width_small_as_preview_fallback(): void
     {
-        $mapper = new GiphyGifMapper();
+        $mapper = new GiphyGifMapper;
 
         $gif = $mapper->fromArray([
             'id' => 'abc123',
@@ -114,7 +114,7 @@ final class GiphyGifMapperTest extends TestCase
             'The GIPHY field "id" is required.'
         );
 
-        $mapper = new GiphyGifMapper();
+        $mapper = new GiphyGifMapper;
 
         $mapper->fromArray([
             'title' => 'Funny cat',
@@ -136,7 +136,7 @@ final class GiphyGifMapperTest extends TestCase
             'The GIPHY field "images.original.url" is required.'
         );
 
-        $mapper = new GiphyGifMapper();
+        $mapper = new GiphyGifMapper;
 
         $mapper->fromArray([
             'id' => 'abc123',

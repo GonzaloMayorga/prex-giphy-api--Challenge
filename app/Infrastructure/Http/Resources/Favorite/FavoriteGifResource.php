@@ -16,7 +16,7 @@ final class FavoriteGifResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        if (!$this->resource instanceof FavoriteGif) {
+        if (! $this->resource instanceof FavoriteGif) {
             throw new LogicException(
                 'FavoriteGifResource expects a FavoriteGif instance.'
             );
@@ -50,5 +50,3 @@ final class FavoriteGifResource extends JsonResource
         ];
     }
 }
-
-?>

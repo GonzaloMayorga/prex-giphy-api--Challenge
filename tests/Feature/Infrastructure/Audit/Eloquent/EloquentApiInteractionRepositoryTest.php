@@ -19,7 +19,7 @@ final class EloquentApiInteractionRepositoryTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $repository = new EloquentApiInteractionRepository();
+        $repository = new EloquentApiInteractionRepository;
 
         $repository->record(
             new ApiInteraction(
@@ -74,7 +74,7 @@ final class EloquentApiInteractionRepositoryTest extends TestCase
 
     public function test_it_allows_an_unauthenticated_interaction(): void
     {
-        $repository = new EloquentApiInteractionRepository();
+        $repository = new EloquentApiInteractionRepository;
 
         $repository->record(
             new ApiInteraction(
@@ -104,5 +104,3 @@ final class EloquentApiInteractionRepositoryTest extends TestCase
         );
     }
 }
-
-?>

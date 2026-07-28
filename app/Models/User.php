@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -12,9 +13,11 @@ use Laravel\Passport\HasApiTokens;
 
 final class User extends Authenticatable implements OAuthenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens;
+
+    /** @use HasFactory<UserFactory> */
     use HasFactory;
+
     use Notifiable;
 
     /**

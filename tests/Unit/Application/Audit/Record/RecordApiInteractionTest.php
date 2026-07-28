@@ -13,7 +13,7 @@ final class RecordApiInteractionTest extends TestCase
 {
     public function test_it_records_an_api_interaction(): void
     {
-        $repository = new FakeApiInteractionRepository();
+        $repository = new FakeApiInteractionRepository;
 
         $useCase = new RecordApiInteraction(
             $repository
@@ -71,5 +71,3 @@ final class RecordApiInteractionTest extends TestCase
         );
     }
 }
-
-?>

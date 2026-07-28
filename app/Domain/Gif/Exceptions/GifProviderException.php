@@ -17,14 +17,15 @@ final class GifProviderException extends RuntimeException
             previous: $previous,
         );
     }
-    
+
     public static function requestFailed(int $statusCode, ?string $providerMessage = null): self
     {
         $message = sprintf('The Gif provider returned an error with status code %d.', $statusCode);
 
-        if($providerMessage !== null && trim($providerMessage) !== ''){
-            $message .= ' Provider message: ' . trim($providerMessage);
+        if ($providerMessage !== null && trim($providerMessage) !== '') {
+            $message .= ' Provider message: '.trim($providerMessage);
         }
+
         return new self($message);
     }
 
@@ -33,5 +34,3 @@ final class GifProviderException extends RuntimeException
         return new self(message: sprintf('The Gif provider returned an invalid response: %s', $reason), previous: $previous);
     }
 }
-
-?>

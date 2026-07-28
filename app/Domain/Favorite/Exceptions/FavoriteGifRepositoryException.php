@@ -29,5 +29,3 @@ final class FavoriteGifRepositoryException extends RuntimeException
         );
     }
 }
-
-?>

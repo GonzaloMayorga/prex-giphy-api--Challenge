@@ -15,5 +15,3 @@ final class InvalidCredentialsException extends RuntimeException
         );
     }
 }
-
-?>

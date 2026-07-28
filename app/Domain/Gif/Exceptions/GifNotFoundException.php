@@ -13,6 +13,3 @@ final class GifNotFoundException extends RuntimeException
         return new self(message: sprintf('The Gif with ID "%s" was not found.', $id));
     }
 }
-
-
-?>

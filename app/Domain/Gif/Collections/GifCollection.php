@@ -21,21 +21,28 @@ final readonly class GifCollection implements Countable, IteratorAggregate
     private array $items;
 
     /**
-     * @param list<Gif> $items
+     * @param  array<array-key, mixed>  $items
      */
-    public function __construct(array $items){
-        foreach ($items as $item){
-            if(!$item instanceof Gif){
-                throw new InvalidArgumentException('All items must be instances of Gif.');
+    public function __construct(array $items)
+    {
+        $validatedItems = [];
+
+        foreach ($items as $item) {
+            if (! $item instanceof Gif) {
+                throw new InvalidArgumentException(
+                    'All items must be instances of Gif.',
+                );
             }
+
+            $validatedItems[] = $item;
         }
-        $this->items = array_values($items);
+
+        $this->items = $validatedItems;
     }
 
     /**
      * @return list<Gif>
      */
-
     public function items(): array
     {
         return $this->items;
@@ -53,12 +60,9 @@ final readonly class GifCollection implements Countable, IteratorAggregate
     {
         yield from $this->items;
     }
-    
+
     public function isEmpty(): bool
     {
         return $this->items === [];
     }
-
-
 }
-?>

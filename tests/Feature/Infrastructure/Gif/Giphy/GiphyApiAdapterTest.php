@@ -24,22 +24,21 @@ final class GiphyApiAdapterTest extends TestCase
     public function test_it_searches_gifs_using_giphy(): void
     {
         Http::fake([
-            'https://api.giphy.com/v1/gifs/search*'
-                => Http::response([
-                    'data' => [
-                        $this->giphyGifPayload(),
-                    ],
-                    'pagination' => [
-                        'offset' => 5,
-                        'count' => 1,
-                        'total_count' => 100,
-                    ],
-                    'meta' => [
-                        'status' => 200,
-                        'msg' => 'OK',
-                        'response_id' => 'response-123',
-                    ],
-                ], 200),
+            'https://api.giphy.com/v1/gifs/search*' => Http::response([
+                'data' => [
+                    $this->giphyGifPayload(),
+                ],
+                'pagination' => [
+                    'offset' => 5,
+                    'count' => 1,
+                    'total_count' => 100,
+                ],
+                'meta' => [
+                    'status' => 200,
+                    'msg' => 'OK',
+                    'response_id' => 'response-123',
+                ],
+            ], 200),
         ]);
 
         $result = $this->adapter()->search(
@@ -84,15 +83,14 @@ final class GiphyApiAdapterTest extends TestCase
     public function test_it_gets_a_gif_by_id(): void
     {
         Http::fake([
-            'https://api.giphy.com/v1/gifs/abc123*'
-                => Http::response([
-                    'data' => $this->giphyGifPayload(),
-                    'meta' => [
-                        'status' => 200,
-                        'msg' => 'OK',
-                        'response_id' => 'response-123',
-                    ],
-                ], 200),
+            'https://api.giphy.com/v1/gifs/abc123*' => Http::response([
+                'data' => $this->giphyGifPayload(),
+                'meta' => [
+                    'status' => 200,
+                    'msg' => 'OK',
+                    'response_id' => 'response-123',
+                ],
+            ], 200),
         ]);
 
         $gif = $this->adapter()->getById('abc123');
@@ -105,15 +103,14 @@ final class GiphyApiAdapterTest extends TestCase
     public function test_it_returns_null_when_the_gif_is_not_found(): void
     {
         Http::fake([
-            'https://api.giphy.com/v1/gifs/missing*'
-                => Http::response([
-                    'data' => [],
-                    'meta' => [
-                        'status' => 404,
-                        'msg' => 'Not Found',
-                        'response_id' => 'response-404',
-                    ],
-                ], 404),
+            'https://api.giphy.com/v1/gifs/missing*' => Http::response([
+                'data' => [],
+                'meta' => [
+                    'status' => 404,
+                    'msg' => 'Not Found',
+                    'response_id' => 'response-404',
+                ],
+            ], 404),
         ]);
 
         $gif = $this->adapter()->getById('missing');
@@ -124,15 +121,14 @@ final class GiphyApiAdapterTest extends TestCase
     public function test_it_translates_an_unsuccessful_response(): void
     {
         Http::fake([
-            'https://api.giphy.com/v1/gifs/search*'
-                => Http::response([
-                    'data' => [],
-                    'meta' => [
-                        'status' => 500,
-                        'msg' => 'Internal Server Error',
-                        'response_id' => 'response-500',
-                    ],
-                ], 500),
+            'https://api.giphy.com/v1/gifs/search*' => Http::response([
+                'data' => [],
+                'meta' => [
+                    'status' => 500,
+                    'msg' => 'Internal Server Error',
+                    'response_id' => 'response-500',
+                ],
+            ], 500),
         ]);
 
         $this->expectException(
@@ -153,15 +149,14 @@ final class GiphyApiAdapterTest extends TestCase
     public function test_it_rejects_a_malformed_response(): void
     {
         Http::fake([
-            'https://api.giphy.com/v1/gifs/search*'
-                => Http::response([
-                    'unexpected' => 'value',
-                    'meta' => [
-                        'status' => 200,
-                        'msg' => 'OK',
-                        'response_id' => 'response-123',
-                    ],
-                ], 200),
+            'https://api.giphy.com/v1/gifs/search*' => Http::response([
+                'unexpected' => 'value',
+                'meta' => [
+                    'status' => 200,
+                    'msg' => 'OK',
+                    'response_id' => 'response-123',
+                ],
+            ], 200),
         ]);
 
         $this->expectException(
@@ -182,15 +177,14 @@ final class GiphyApiAdapterTest extends TestCase
     public function test_it_rejects_a_synthetic_response(): void
     {
         Http::fake([
-            'https://api.giphy.com/v1/gifs/search*'
-                => Http::response([
-                    'data' => [],
-                    'meta' => [
-                        'status' => 200,
-                        'msg' => 'OK',
-                        'response_id' => '',
-                    ],
-                ], 200),
+            'https://api.giphy.com/v1/gifs/search*' => Http::response([
+                'data' => [],
+                'meta' => [
+                    'status' => 200,
+                    'msg' => 'OK',
+                    'response_id' => '',
+                ],
+            ], 200),
         ]);
 
         $this->expectException(
@@ -212,7 +206,7 @@ final class GiphyApiAdapterTest extends TestCase
     {
         return new GiphyApiAdapter(
             http: $this->app->make(Factory::class),
-            mapper: new GiphyGifMapper(),
+            mapper: new GiphyGifMapper,
             baseUrl: 'https://api.giphy.com/v1',
             apiKey: 'test-api-key',
             timeoutSeconds: 5,

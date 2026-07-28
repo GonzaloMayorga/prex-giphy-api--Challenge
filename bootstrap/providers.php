@@ -1,6 +1,9 @@
 <?php
 
+use App\Infrastructure\Providers\HexagonalServiceProvider;
+use App\Providers\AppServiceProvider;
+
 return [
-    App\Providers\AppServiceProvider::class,
-    App\Infrastructure\Providers\HexagonalServiceProvider::class,
+    AppServiceProvider::class,
+    HexagonalServiceProvider::class,
 ];

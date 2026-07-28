@@ -7,8 +7,7 @@ namespace Tests\Fakes\Audit;
 use App\Domain\Audit\Entities\ApiInteraction;
 use App\Domain\Audit\Ports\ApiInteractionRepository;
 
-final class FakeApiInteractionRepository implements
-    ApiInteractionRepository
+final class FakeApiInteractionRepository implements ApiInteractionRepository
 {
     public ?ApiInteraction $recordedInteraction = null;
 
@@ -21,5 +20,3 @@ final class FakeApiInteractionRepository implements
         $this->recordCalls++;
     }
 }
-
-?>

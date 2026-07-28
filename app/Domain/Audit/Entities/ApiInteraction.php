@@ -9,12 +9,14 @@ use InvalidArgumentException;
 final readonly class ApiInteraction
 {
     public const MAX_SERVICE_LENGTH = 150;
+
     public const MAX_HTTP_METHOD_LENGTH = 10;
+
     public const MAX_PATH_LENGTH = 2048;
 
     /**
-     * @param array<string, mixed> $requestBody
-     * @param array<string, mixed> $responseBody
+     * @param  array<string, mixed>  $requestBody
+     * @param  array<string, mixed>  $responseBody
      */
     public function __construct(
         private ?int $userId,
@@ -168,5 +170,3 @@ final readonly class ApiInteraction
         return $this->durationMs;
     }
 }
-
-?>

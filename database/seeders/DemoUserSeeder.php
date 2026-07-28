@@ -51,5 +51,3 @@ final class DemoUserSeeder extends Seeder
         );
     }
 }
-
-?>

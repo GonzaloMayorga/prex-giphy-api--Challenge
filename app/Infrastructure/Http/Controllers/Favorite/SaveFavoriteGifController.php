@@ -17,8 +17,7 @@ final readonly class SaveFavoriteGifController
 {
     public function __construct(
         private SaveFavoriteGif $saveFavoriteGif,
-    ) {
-    }
+    ) {}
 
     public function __invoke(
         SaveFavoriteGifRequest $request,
@@ -28,7 +27,7 @@ final readonly class SaveFavoriteGifController
         $authenticatedUser = $request->user();
 
         if (
-            !$authenticatedUser
+            ! $authenticatedUser
             instanceof Authenticatable
         ) {
             throw new LogicException(
@@ -55,5 +54,3 @@ final readonly class SaveFavoriteGifController
             );
     }
 }
-
-?>

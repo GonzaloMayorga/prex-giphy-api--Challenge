@@ -7,12 +7,14 @@ namespace App\Application\Audit\Record;
 final readonly class RecordApiInteractionInput
 {
     public string $service;
+
     public string $httpMethod;
+
     public string $path;
 
     /**
-     * @param array<string, mixed> $requestBody
-     * @param array<string, mixed> $responseBody
+     * @param  array<string, mixed>  $requestBody
+     * @param  array<string, mixed>  $responseBody
      */
     public function __construct(
         public ?int $userId,
@@ -36,5 +38,3 @@ final readonly class RecordApiInteractionInput
             .ltrim($normalizedPath, '/');
     }
 }
-
-?>

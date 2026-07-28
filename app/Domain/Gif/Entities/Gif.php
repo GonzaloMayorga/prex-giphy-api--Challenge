@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\Gif\Entities;
@@ -54,4 +55,3 @@ final readonly class Gif
         return $this->username;
     }
 }
-?>

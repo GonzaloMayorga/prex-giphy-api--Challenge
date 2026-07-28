@@ -14,8 +14,7 @@ final readonly class SearchGifsController
 {
     public function __construct(
         private SearchGifs $searchGifs,
-    ) {
-    }
+    ) {}
 
     public function __invoke(
         SearchGifsRequest $request,

@@ -20,7 +20,7 @@ final class SaveFavoriteGifTest extends TestCase
 {
     public function test_it_saves_a_favorite_gif(): void
     {
-        $provider = new FakeGifProvider();
+        $provider = new FakeGifProvider;
 
         $provider->willReturnGifById(
             new Gif(
@@ -30,7 +30,7 @@ final class SaveFavoriteGifTest extends TestCase
             )
         );
 
-        $repository = new FakeFavoriteGifRepository();
+        $repository = new FakeFavoriteGifRepository;
         $repository->willReportExisting(false);
 
         $expectedFavorite = FavoriteGif::reconstitute(
@@ -100,8 +100,8 @@ final class SaveFavoriteGifTest extends TestCase
 
     public function test_it_rejects_saving_for_another_user(): void
     {
-        $provider = new FakeGifProvider();
-        $repository = new FakeFavoriteGifRepository();
+        $provider = new FakeGifProvider;
+        $repository = new FakeFavoriteGifRepository;
 
         $useCase = new SaveFavoriteGif(
             favoriteRepository: $repository,
@@ -124,9 +124,9 @@ final class SaveFavoriteGifTest extends TestCase
 
     public function test_it_rejects_a_duplicate_favorite(): void
     {
-        $provider = new FakeGifProvider();
+        $provider = new FakeGifProvider;
 
-        $repository = new FakeFavoriteGifRepository();
+        $repository = new FakeFavoriteGifRepository;
         $repository->willReportExisting(true);
 
         $useCase = new SaveFavoriteGif(
@@ -160,10 +160,10 @@ final class SaveFavoriteGifTest extends TestCase
 
     public function test_it_rejects_a_nonexistent_gif(): void
     {
-        $provider = new FakeGifProvider();
+        $provider = new FakeGifProvider;
         $provider->willReturnGifById(null);
 
-        $repository = new FakeFavoriteGifRepository();
+        $repository = new FakeFavoriteGifRepository;
         $repository->willReportExisting(false);
 
         $useCase = new SaveFavoriteGif(
@@ -214,5 +214,3 @@ final class SaveFavoriteGifTest extends TestCase
         );
     }
 }
-
-?>

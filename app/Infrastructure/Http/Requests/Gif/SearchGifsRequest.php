@@ -60,7 +60,7 @@ final class SearchGifsRequest extends FormRequest
     {
         $query = $this->query('query');
 
-        if (!is_string($query)) {
+        if (! is_string($query)) {
             return;
         }
 

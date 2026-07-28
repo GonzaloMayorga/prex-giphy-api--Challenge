@@ -17,5 +17,3 @@ interface FavoriteGifRepository
         FavoriteGif $favoriteGif,
     ): FavoriteGif;
 }
-
-?>

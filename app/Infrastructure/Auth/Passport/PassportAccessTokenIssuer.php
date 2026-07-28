@@ -11,8 +11,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use RuntimeException;
 
-final readonly class PassportAccessTokenIssuer implements
-    AccessTokenIssuer
+final readonly class PassportAccessTokenIssuer implements AccessTokenIssuer
 {
     public function __construct(
         private int $ttlSeconds,
@@ -63,5 +62,3 @@ final readonly class PassportAccessTokenIssuer implements
         );
     }
 }
-
-?>

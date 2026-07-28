@@ -17,5 +17,3 @@ return [
         'DEMO_USER_PASSWORD',
     ),
 ];
-
-?>

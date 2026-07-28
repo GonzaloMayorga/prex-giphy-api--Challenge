@@ -45,5 +45,3 @@ final class FavoriteGifModel extends Model
         );
     }
 }
-
-?>

@@ -9,6 +9,7 @@ use InvalidArgumentException;
 final readonly class LoginInput
 {
     public string $email;
+
     public string $password;
 
     public function __construct(
@@ -34,8 +35,7 @@ final readonly class LoginInput
             );
         }
 
-    $this->email = $normalizedEmail;
-    $this->password = $password;
-   } 
+        $this->email = $normalizedEmail;
+        $this->password = $password;
+    }
 }
-?>

@@ -11,8 +11,7 @@ final readonly class RecordApiInteraction
 {
     public function __construct(
         private ApiInteractionRepository $repository,
-    ) {
-    }
+    ) {}
 
     public function execute(
         RecordApiInteractionInput $input,
@@ -34,5 +33,3 @@ final readonly class RecordApiInteraction
         );
     }
 }
-
-?>
