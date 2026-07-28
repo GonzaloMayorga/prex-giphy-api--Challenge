@@ -130,11 +130,11 @@ Configurar como mínimo:
 LOCAL_UID=1000
 LOCAL_GID=1000
 
-GIPHY_API_KEY=<your-giphy-api-key>
+GIPHY_API_KEY=debe reemplazarse por una key real antes de probar los endpoints.
 
 DEMO_USER_NAME="Challenge User"
 DEMO_USER_EMAIL=challenge@example.com
-DEMO_USER_PASSWORD=<your-demo-password>
+DEMO_USER_PASSWORD=debe reemplazarse por un valor real antes de ejecutar db:seed.
 ```
 
 Los valores `LOCAL_UID` y `LOCAL_GID` deben reemplazarse por el resultado real de `id -u` e `id -g`.
