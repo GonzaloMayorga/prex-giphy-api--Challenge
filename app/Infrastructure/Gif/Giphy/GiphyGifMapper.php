@@ -10,7 +10,7 @@ use UnexpectedValueException;
 final class GiphyGifMapper
 {
     /**
-     * @param array<string, mixed> $payload
+     * @param  array<string, mixed>  $payload
      */
     public function fromArray(array $payload): Gif
     {
@@ -46,7 +46,7 @@ final class GiphyGifMapper
     }
 
     /**
-     * @param array<string, mixed> $payload
+     * @param  array<string, mixed>  $payload
      */
     private function resolveTitle(array $payload): string
     {
@@ -89,7 +89,7 @@ final class GiphyGifMapper
 
     private function optionalString(mixed $value): ?string
     {
-        if (!is_string($value)) {
+        if (! is_string($value)) {
             return null;
         }
 
@@ -100,5 +100,3 @@ final class GiphyGifMapper
             : $normalizedValue;
     }
 }
-
-?>

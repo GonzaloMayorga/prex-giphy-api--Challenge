@@ -93,5 +93,3 @@ final class SaveFavoriteGifRequest extends FormRequest
         }
     }
 }
-
-?>

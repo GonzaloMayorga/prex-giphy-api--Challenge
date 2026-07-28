@@ -14,7 +14,7 @@ final readonly class SensitiveDataRedactor
     private array $sensitiveKeys;
 
     /**
-     * @param list<string> $sensitiveKeys
+     * @param  list<string>  $sensitiveKeys
      */
     public function __construct(
         array $sensitiveKeys,
@@ -43,7 +43,7 @@ final readonly class SensitiveDataRedactor
 
     public function redact(mixed $value): mixed
     {
-        if (!is_array($value)) {
+        if (! is_array($value)) {
             return $value;
         }
 
@@ -65,5 +65,3 @@ final readonly class SensitiveDataRedactor
         return $redacted;
     }
 }
-
-?>

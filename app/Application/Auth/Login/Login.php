@@ -15,8 +15,7 @@ final readonly class Login
     public function __construct(
         private CredentialsAuthenticator $authenticator,
         private AccessTokenIssuer $tokenIssuer,
-    ) {
-    }
+    ) {}
 
     public function execute(
         LoginInput $input,

@@ -12,8 +12,7 @@ final readonly class GetGifById
 {
     public function __construct(
         private GifProvider $gifProvider,
-    ) {
-    }
+    ) {}
 
     public function execute(
         GetGifByIdInput $input,

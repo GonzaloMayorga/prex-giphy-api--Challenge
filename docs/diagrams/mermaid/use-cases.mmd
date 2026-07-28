@@ -1,0 +1,32 @@
+flowchart LR
+    Consumer["Consumer"]
+    Giphy["GIPHY API"]
+
+    subgraph API["Prex Giphy API"]
+        Login["Login"]
+        Search["Search GIFs"]
+        Find["Find GIF by ID"]
+        Save["Save favorite GIF"]
+        Authenticate["Authenticate request"]
+        Audit["Audit interaction"]
+    end
+
+    Consumer --> Login
+    Consumer --> Search
+    Consumer --> Find
+    Consumer --> Save
+
+    Search -. includes .-> Authenticate
+    Find -. includes .-> Authenticate
+    Save -. includes .-> Authenticate
+
+    Login -. includes .-> Audit
+    Search -. includes .-> Audit
+    Find -. includes .-> Audit
+    Save -. includes .-> Audit
+
+    Search --> Giphy
+    Find --> Giphy
+    Save --> Giphy
+
+    Save -. rule .-> UserRule["requested user_id must match authenticated user"]

@@ -21,7 +21,7 @@ final class SearchGifsTest extends TestCase
             username: 'gonzalo',
         );
 
-        $provider = new FakeGifProvider();
+        $provider = new FakeGifProvider;
         $provider->willReturnSearchResults([$expectedGif]);
 
         $useCase = new SearchGifs($provider);
@@ -42,7 +42,7 @@ final class SearchGifsTest extends TestCase
 
     public function test_it_uses_default_pagination_values(): void
     {
-        $provider = new FakeGifProvider();
+        $provider = new FakeGifProvider;
         $provider->willReturnSearchResults([]);
 
         $useCase = new SearchGifs($provider);
@@ -58,7 +58,7 @@ final class SearchGifsTest extends TestCase
 
     public function test_it_normalizes_the_search_query(): void
     {
-        $provider = new FakeGifProvider();
+        $provider = new FakeGifProvider;
 
         $useCase = new SearchGifs($provider);
 
@@ -71,6 +71,7 @@ final class SearchGifsTest extends TestCase
             $provider->receivedQuery,
         );
     }
+
     public function test_it_rejects_an_empty_query(): void
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -144,8 +145,4 @@ final class SearchGifsTest extends TestCase
             query: str_repeat('a', 51),
         );
     }
-    
-
 }
-
-?>

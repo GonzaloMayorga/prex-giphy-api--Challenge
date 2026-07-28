@@ -33,10 +33,10 @@ final class LoginTest extends TestCase
             ),
         );
 
-        $authenticator = new FakeCredentialsAuthenticator();
+        $authenticator = new FakeCredentialsAuthenticator;
         $authenticator->willAuthenticateAs($user);
 
-        $tokenIssuer = new FakeAccessTokenIssuer();
+        $tokenIssuer = new FakeAccessTokenIssuer;
         $tokenIssuer->willIssue($token);
 
         $useCase = new Login(
@@ -84,10 +84,10 @@ final class LoginTest extends TestCase
 
     public function test_it_rejects_invalid_credentials(): void
     {
-        $authenticator = new FakeCredentialsAuthenticator();
+        $authenticator = new FakeCredentialsAuthenticator;
         $authenticator->willAuthenticateAs(null);
 
-        $tokenIssuer = new FakeAccessTokenIssuer();
+        $tokenIssuer = new FakeAccessTokenIssuer;
 
         $useCase = new Login(
             authenticator: $authenticator,
@@ -138,5 +138,3 @@ final class LoginTest extends TestCase
         );
     }
 }
-
-?>

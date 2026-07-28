@@ -13,8 +13,7 @@ final readonly class GetGifByIdController
 {
     public function __construct(
         private GetGifById $getGifById,
-    ) {
-    }
+    ) {}
 
     public function __invoke(
         GetGifByIdRequest $request,

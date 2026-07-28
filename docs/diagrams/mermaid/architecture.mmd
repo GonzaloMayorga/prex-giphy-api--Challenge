@@ -1,0 +1,71 @@
+flowchart LR
+    subgraph IN["Infrastructure - Input Adapters"]
+        Routes["API routes"]
+        Requests["Form Requests"]
+        Controllers["HTTP Controllers"]
+        Resources["JSON Resources"]
+        AuthMiddleware["Passport auth:api"]
+        AuditMiddleware["Audit middleware"]
+        ExceptionHandler["Exception handler"]
+    end
+
+    subgraph APP["Application - Use Cases"]
+        Login["Login"]
+        Search["SearchGifs"]
+        GetById["GetGifById"]
+        SaveFavorite["SaveFavoriteGif"]
+        RecordAudit["RecordApiInteraction"]
+    end
+
+    subgraph DOMAIN["Domain"]
+        Entities["Entities"]
+        ValueObjects["Value Objects"]
+        Exceptions["Domain Exceptions"]
+        GifProvider["GifProvider port"]
+        FavoriteRepository["FavoriteGifRepository port"]
+        CredentialsAuthenticator["CredentialsAuthenticator port"]
+        AccessTokenIssuer["AccessTokenIssuer port"]
+        AuditRepository["ApiInteractionRepository port"]
+    end
+
+    subgraph OUT["Infrastructure - Output Adapters"]
+        GiphyAdapter["GiphyApiAdapter"]
+        FavoriteEloquent["EloquentFavoriteGifRepository"]
+        CredentialsEloquent["EloquentCredentialsAuthenticator"]
+        PassportIssuer["PassportAccessTokenIssuer"]
+        AuditEloquent["EloquentApiInteractionRepository"]
+    end
+
+    Giphy["GIPHY API"]
+    MySQL[("MySQL")]
+    Passport["Laravel Passport"]
+
+    Routes --> Requests --> Controllers
+    AuthMiddleware --> Controllers
+    Controllers --> Login
+    Controllers --> Search
+    Controllers --> GetById
+    Controllers --> SaveFavorite
+    AuditMiddleware --> RecordAudit
+    Controllers --> Resources
+    ExceptionHandler --> Exceptions
+
+    Login --> CredentialsAuthenticator
+    Login --> AccessTokenIssuer
+    Search --> GifProvider
+    GetById --> GifProvider
+    SaveFavorite --> GifProvider
+    SaveFavorite --> FavoriteRepository
+    RecordAudit --> AuditRepository
+
+    GiphyAdapter -. implements .-> GifProvider
+    FavoriteEloquent -. implements .-> FavoriteRepository
+    CredentialsEloquent -. implements .-> CredentialsAuthenticator
+    PassportIssuer -. implements .-> AccessTokenIssuer
+    AuditEloquent -. implements .-> AuditRepository
+
+    GiphyAdapter --> Giphy
+    FavoriteEloquent --> MySQL
+    CredentialsEloquent --> MySQL
+    AuditEloquent --> MySQL
+    PassportIssuer --> Passport --> MySQL

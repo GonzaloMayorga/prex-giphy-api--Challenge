@@ -9,8 +9,7 @@ use App\Domain\Audit\Exceptions\ApiInteractionRepositoryException;
 use App\Domain\Audit\Ports\ApiInteractionRepository;
 use Illuminate\Database\QueryException;
 
-final class EloquentApiInteractionRepository implements
-    ApiInteractionRepository
+final class EloquentApiInteractionRepository implements ApiInteractionRepository
 {
     public function record(
         ApiInteraction $interaction,
@@ -29,12 +28,9 @@ final class EloquentApiInteractionRepository implements
                 'duration_ms' => $interaction->durationMs(),
             ]);
         } catch (QueryException $exception) {
-            throw ApiInteractionRepositoryException
-                ::persistenceFailed(
-                    $exception
-                );
+            throw ApiInteractionRepositoryException::persistenceFailed(
+                $exception
+            );
         }
     }
 }
-
-?>

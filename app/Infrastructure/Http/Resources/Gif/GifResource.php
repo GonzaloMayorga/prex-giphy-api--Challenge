@@ -12,11 +12,11 @@ use LogicException;
 final class GifResource extends JsonResource
 {
     /**
-     *  @return array<string, mixed>
+     * @return array<string, mixed>
      */
     public function toArray(Request $request): array
     {
-        if (!$this->resource instanceof Gif) {
+        if (! $this->resource instanceof Gif) {
             throw new LogicException('GifResource expects an instance of Gif.');
         }
 

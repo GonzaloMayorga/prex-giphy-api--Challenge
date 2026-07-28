@@ -16,8 +16,7 @@ final readonly class SaveFavoriteGif
     public function __construct(
         private FavoriteGifRepository $favoriteRepository,
         private GifProvider $gifProvider,
-    ) {
-    }
+    ) {}
 
     public function execute(
         SaveFavoriteGifInput $input,
@@ -65,5 +64,3 @@ final readonly class SaveFavoriteGif
         );
     }
 }
-
-?>

@@ -33,7 +33,7 @@ final class SaveFavoriteGifEndpointTest extends TestCase
 
     public function test_it_saves_a_favorite_gif(): void
     {
-        $provider = new FakeGifProvider();
+        $provider = new FakeGifProvider;
 
         $provider->willReturnGifById(
             new Gif(
@@ -43,7 +43,7 @@ final class SaveFavoriteGifEndpointTest extends TestCase
             )
         );
 
-        $repository = new FakeFavoriteGifRepository();
+        $repository = new FakeFavoriteGifRepository;
         $repository->willReportExisting(false);
 
         $repository->willReturnSaved(
@@ -100,8 +100,8 @@ final class SaveFavoriteGifEndpointTest extends TestCase
 
     public function test_it_rejects_another_user_id(): void
     {
-        $provider = new FakeGifProvider();
-        $repository = new FakeFavoriteGifRepository();
+        $provider = new FakeGifProvider;
+        $repository = new FakeFavoriteGifRepository;
 
         $this->bindDependencies(
             $provider,
@@ -137,9 +137,9 @@ final class SaveFavoriteGifEndpointTest extends TestCase
 
     public function test_it_returns_conflict_for_a_duplicate(): void
     {
-        $provider = new FakeGifProvider();
+        $provider = new FakeGifProvider;
 
-        $repository = new FakeFavoriteGifRepository();
+        $repository = new FakeFavoriteGifRepository;
         $repository->willReportExisting(true);
 
         $this->bindDependencies(
@@ -172,10 +172,10 @@ final class SaveFavoriteGifEndpointTest extends TestCase
 
     public function test_it_returns_not_found_for_an_unknown_gif(): void
     {
-        $provider = new FakeGifProvider();
+        $provider = new FakeGifProvider;
         $provider->willReturnGifById(null);
 
-        $repository = new FakeFavoriteGifRepository();
+        $repository = new FakeFavoriteGifRepository;
         $repository->willReportExisting(false);
 
         $this->bindDependencies(
@@ -206,8 +206,8 @@ final class SaveFavoriteGifEndpointTest extends TestCase
 
     public function test_it_validates_the_payload(): void
     {
-        $provider = new FakeGifProvider();
-        $repository = new FakeFavoriteGifRepository();
+        $provider = new FakeGifProvider;
+        $repository = new FakeFavoriteGifRepository;
 
         $this->bindDependencies(
             $provider,
@@ -259,5 +259,3 @@ final class SaveFavoriteGifEndpointTest extends TestCase
         );
     }
 }
-
-?>

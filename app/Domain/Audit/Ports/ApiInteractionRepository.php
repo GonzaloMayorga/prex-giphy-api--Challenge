@@ -12,5 +12,3 @@ interface ApiInteractionRepository
         ApiInteraction $interaction,
     ): void;
 }
-
-?>

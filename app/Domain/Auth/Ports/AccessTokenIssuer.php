@@ -13,5 +13,3 @@ interface AccessTokenIssuer
         string $tokenName,
     ): IssuedAccessToken;
 }
-
-?>

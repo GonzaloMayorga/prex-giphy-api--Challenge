@@ -6,16 +6,15 @@ namespace App\Infrastructure\Http\Controllers\Auth;
 
 use App\Application\Auth\Login\Login;
 use App\Application\Auth\Login\LoginInput;
+use App\Infrastructure\Audit\Http\AuditContext;
 use App\Infrastructure\Http\Requests\Auth\LoginRequest;
 use App\Infrastructure\Http\Resources\Auth\LoginResource;
-use App\Infrastructure\Audit\Http\AuditContext;
 
 final readonly class LoginController
 {
     public function __construct(
         private Login $login,
-    ) {
-    }
+    ) {}
 
     public function __invoke(
         LoginRequest $request,
@@ -36,5 +35,3 @@ final readonly class LoginController
         return new LoginResource($result);
     }
 }
-
-?>

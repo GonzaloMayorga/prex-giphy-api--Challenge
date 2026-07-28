@@ -16,7 +16,7 @@ final class LoginResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        if (!$this->resource instanceof LoginResult) {
+        if (! $this->resource instanceof LoginResult) {
             throw new LogicException(
                 'LoginResource expects a LoginResult instance.'
             );
@@ -40,5 +40,3 @@ final class LoginResource extends JsonResource
         ];
     }
 }
-
-?>

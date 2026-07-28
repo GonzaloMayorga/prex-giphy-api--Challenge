@@ -19,15 +19,19 @@ final class FakeGifProvider implements GifProvider
     private ?Gif $gifById = null;
 
     private ?Throwable $searchException = null;
+
     private ?Throwable $getByIdException = null;
 
     public ?string $receivedQuery = null;
+
     public ?int $receivedLimit = null;
+
     public ?int $receivedOffset = null;
+
     public ?string $receivedId = null;
 
     /**
-     * @param list<Gif> $gifs
+     * @param  list<Gif>  $gifs
      */
     public function willReturnSearchResults(array $gifs): void
     {

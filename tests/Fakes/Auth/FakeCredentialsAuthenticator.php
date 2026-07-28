@@ -7,12 +7,12 @@ namespace Tests\Fakes\Auth;
 use App\Domain\Auth\Entities\AuthenticatedUser;
 use App\Domain\Auth\Ports\CredentialsAuthenticator;
 
-final class FakeCredentialsAuthenticator implements
-    CredentialsAuthenticator
+final class FakeCredentialsAuthenticator implements CredentialsAuthenticator
 {
     private ?AuthenticatedUser $user = null;
 
     public ?string $receivedEmail = null;
+
     public ?string $receivedPassword = null;
 
     public function willAuthenticateAs(
@@ -31,5 +31,3 @@ final class FakeCredentialsAuthenticator implements
         return $this->user;
     }
 }
-
-?>

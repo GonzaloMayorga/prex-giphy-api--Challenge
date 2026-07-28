@@ -13,6 +13,7 @@ final class FakeAccessTokenIssuer implements AccessTokenIssuer
     private ?IssuedAccessToken $token = null;
 
     public ?int $receivedUserId = null;
+
     public ?string $receivedTokenName = null;
 
     public function willIssue(
@@ -37,5 +38,3 @@ final class FakeAccessTokenIssuer implements AccessTokenIssuer
         return $this->token;
     }
 }
-
-?>

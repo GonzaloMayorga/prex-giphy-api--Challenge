@@ -18,5 +18,3 @@ final class ApiInteractionRepositoryException extends RuntimeException
         );
     }
 }
-
-?>

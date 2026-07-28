@@ -13,4 +13,3 @@ interface CredentialsAuthenticator
         string $password,
     ): ?AuthenticatedUser;
 }
-?>

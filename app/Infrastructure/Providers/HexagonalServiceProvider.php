@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Providers;
 
+use App\Domain\Audit\Ports\ApiInteractionRepository;
 use App\Domain\Auth\Ports\AccessTokenIssuer;
 use App\Domain\Auth\Ports\CredentialsAuthenticator;
+use App\Domain\Favorite\Ports\FavoriteGifRepository;
 use App\Domain\Gif\Ports\GifProvider;
+use App\Infrastructure\Audit\Eloquent\EloquentApiInteractionRepository;
+use App\Infrastructure\Audit\Security\SensitiveDataRedactor;
 use App\Infrastructure\Auth\Eloquent\EloquentCredentialsAuthenticator;
 use App\Infrastructure\Auth\Passport\PassportAccessTokenIssuer;
+use App\Infrastructure\Favorite\Eloquent\EloquentFavoriteGifRepository;
 use App\Infrastructure\Gif\Giphy\GiphyApiAdapter;
 use App\Infrastructure\Gif\Giphy\GiphyGifMapper;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Client\Factory;
 use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
-use App\Domain\Favorite\Ports\FavoriteGifRepository;
-use App\Infrastructure\Favorite\Eloquent\EloquentFavoriteGifRepository;
-use App\Domain\Audit\Ports\ApiInteractionRepository;
-use App\Infrastructure\Audit\Eloquent\EloquentApiInteractionRepository;
-use App\Infrastructure\Audit\Security\SensitiveDataRedactor;
 
 final class HexagonalServiceProvider extends ServiceProvider
 {
@@ -31,9 +31,7 @@ final class HexagonalServiceProvider extends ServiceProvider
         $this->registerAudit();
     }
 
-    public function boot(): void
-    {
-    }
+    public function boot(): void {}
 
     private function registerGifProvider(): void
     {
@@ -100,6 +98,7 @@ final class HexagonalServiceProvider extends ServiceProvider
             EloquentFavoriteGifRepository::class,
         );
     }
+
     private function registerAudit(): void
     {
         $this->app->bind(

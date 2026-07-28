@@ -2,8 +2,14 @@
 
 declare(strict_types=1);
 
+use App\Domain\Auth\Exceptions\InvalidCredentialsException;
+use App\Domain\Favorite\Exceptions\FavoriteGifAlreadyExistsException;
+use App\Domain\Favorite\Exceptions\FavoriteGifOwnershipException;
+use App\Domain\Favorite\Exceptions\FavoriteGifRepositoryException;
 use App\Domain\Gif\Exceptions\GifNotFoundException;
 use App\Domain\Gif\Exceptions\GifProviderException;
+use App\Infrastructure\Http\Middleware\AuditApiInteractionMiddleware;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -12,12 +18,6 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use App\Domain\Auth\Exceptions\InvalidCredentialsException;
-use Illuminate\Auth\AuthenticationException;
-use App\Domain\Favorite\Exceptions\FavoriteGifAlreadyExistsException;
-use App\Domain\Favorite\Exceptions\FavoriteGifOwnershipException;
-use App\Domain\Favorite\Exceptions\FavoriteGifRepositoryException;
-use App\Infrastructure\Http\Middleware\AuditApiInteractionMiddleware;
 
 return Application::configure(
     basePath: dirname(__DIR__)
@@ -54,7 +54,7 @@ return Application::configure(
                     ValidationException $exception,
                     Request $request,
                 ): ?JsonResponse {
-                    if (!$request->is('api', 'api/*')) {
+                    if (! $request->is('api', 'api/*')) {
                         return null;
                     }
 
@@ -67,13 +67,13 @@ return Application::configure(
                     ], 422);
                 }
             );
-            
+
             $exceptions->render(
                 function (
                     InvalidCredentialsException $exception,
                     Request $request,
                 ): ?JsonResponse {
-                    if (!$request->is('api', 'api/*')) {
+                    if (! $request->is('api', 'api/*')) {
                         return null;
                     }
 
@@ -91,7 +91,7 @@ return Application::configure(
                     AuthenticationException $exception,
                     Request $request,
                 ): ?JsonResponse {
-                    if (!$request->is('api', 'api/*')) {
+                    if (! $request->is('api', 'api/*')) {
                         return null;
                     }
 
@@ -109,7 +109,7 @@ return Application::configure(
                     FavoriteGifOwnershipException $exception,
                     Request $request,
                 ): ?JsonResponse {
-                    if (!$request->is('api', 'api/*')) {
+                    if (! $request->is('api', 'api/*')) {
                         return null;
                     }
 
@@ -127,7 +127,7 @@ return Application::configure(
                     GifNotFoundException $exception,
                     Request $request,
                 ): ?JsonResponse {
-                    if (!$request->is('api', 'api/*')) {
+                    if (! $request->is('api', 'api/*')) {
                         return null;
                     }
 
@@ -145,7 +145,7 @@ return Application::configure(
                     FavoriteGifAlreadyExistsException $exception,
                     Request $request,
                 ): ?JsonResponse {
-                    if (!$request->is('api', 'api/*')) {
+                    if (! $request->is('api', 'api/*')) {
                         return null;
                     }
 
@@ -163,7 +163,7 @@ return Application::configure(
                     FavoriteGifRepositoryException $exception,
                     Request $request,
                 ): ?JsonResponse {
-                    if (!$request->is('api', 'api/*')) {
+                    if (! $request->is('api', 'api/*')) {
                         return null;
                     }
 
@@ -181,7 +181,7 @@ return Application::configure(
                     GifProviderException $exception,
                     Request $request,
                 ): ?JsonResponse {
-                    if (!$request->is('api', 'api/*')) {
+                    if (! $request->is('api', 'api/*')) {
                         return null;
                     }
 
@@ -199,7 +199,7 @@ return Application::configure(
                     NotFoundHttpException $exception,
                     Request $request,
                 ): ?JsonResponse {
-                    if (!$request->is('api', 'api/*')) {
+                    if (! $request->is('api', 'api/*')) {
                         return null;
                     }
 
@@ -217,7 +217,7 @@ return Application::configure(
                     MethodNotAllowedHttpException $exception,
                     Request $request,
                 ): ?JsonResponse {
-                    if (!$request->is('api', 'api/*')) {
+                    if (! $request->is('api', 'api/*')) {
                         return null;
                     }
 

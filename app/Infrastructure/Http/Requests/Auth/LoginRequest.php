@@ -55,7 +55,7 @@ final class LoginRequest extends FormRequest
     {
         $email = $this->input('email');
 
-        if (!is_string($email)) {
+        if (! is_string($email)) {
             return;
         }
 
@@ -66,5 +66,3 @@ final class LoginRequest extends FormRequest
         ]);
     }
 }
-
-?>

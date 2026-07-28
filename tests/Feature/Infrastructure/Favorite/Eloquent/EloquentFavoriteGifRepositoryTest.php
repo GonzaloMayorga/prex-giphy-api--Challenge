@@ -19,7 +19,7 @@ final class EloquentFavoriteGifRepositoryTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $repository = new EloquentFavoriteGifRepository();
+        $repository = new EloquentFavoriteGifRepository;
 
         $favorite = FavoriteGif::create(
             userId: (int) $user->getKey(),
@@ -72,7 +72,7 @@ final class EloquentFavoriteGifRepositoryTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $repository = new EloquentFavoriteGifRepository();
+        $repository = new EloquentFavoriteGifRepository;
 
         $firstFavorite = FavoriteGif::create(
             userId: (int) $user->getKey(),

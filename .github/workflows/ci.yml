@@ -1,0 +1,42 @@
+name: Continuous Integration
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Configure PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: >-
+            bcmath,
+            curl,
+            dom,
+            intl,
+            mbstring,
+            pcntl,
+            pdo_sqlite,
+            xml,
+            xmlwriter,
+            zip
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Configure application
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+          php artisan passport:keys --force
+
+      - name: Run quality checks
+        run: composer quality

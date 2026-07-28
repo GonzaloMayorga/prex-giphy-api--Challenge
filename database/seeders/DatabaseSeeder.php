@@ -15,5 +15,3 @@ final class DatabaseSeeder extends Seeder
         ]);
     }
 }
-
-?>

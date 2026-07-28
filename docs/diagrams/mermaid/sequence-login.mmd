@@ -1,0 +1,49 @@
+sequenceDiagram
+    actor Client as Consumer
+    participant AuditMW as Audit middleware
+    participant Request as LoginRequest
+    participant Controller as LoginController
+    participant UseCase as Login use case
+    participant Auth as CredentialsAuthenticator
+    participant Users as users table
+    participant Issuer as AccessTokenIssuer
+    participant Passport as Laravel Passport
+    participant OAuth as oauth tables
+    participant Handler as Exception handler
+    participant Audit as RecordApiInteraction
+    participant AuditDB as api_interaction_logs
+
+    Client->>AuditMW: POST /api/login with email and password
+    Note over Client,Controller: Route also applies throttle:10,1
+    AuditMW->>AuditMW: Start audit context
+    AuditMW->>Request: Validate email and password
+
+    alt Invalid payload
+        Request-->>Handler: ValidationException
+        Handler-->>Client: 422 VALIDATION_ERROR
+    else Valid payload
+        Request->>Controller: Validated data
+        Controller->>UseCase: execute(LoginInput)
+        UseCase->>Auth: authenticate(email, password)
+        Auth->>Users: Find user by email and verify password
+        Users-->>Auth: User or null
+
+        alt Invalid credentials
+            Auth-->>UseCase: null
+            UseCase-->>Handler: InvalidCredentialsException
+            Handler-->>Client: 401 INVALID_CREDENTIALS
+        else Valid credentials
+            Auth-->>UseCase: AuthenticatedUser
+            UseCase->>Issuer: issue(userId, tokenName)
+            Issuer->>Passport: createToken()
+            Passport->>OAuth: Store OAuth access token
+            OAuth-->>Passport: Persisted token
+            Passport-->>Issuer: Access token
+            Issuer-->>UseCase: IssuedAccessToken expires in 1800s
+            UseCase-->>Controller: LoginResult
+            Controller-->>Client: 200 token and user
+        end
+    end
+
+    AuditMW->>Audit: Record redacted request and response
+    Audit->>AuditDB: INSERT interaction

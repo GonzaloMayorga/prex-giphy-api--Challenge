@@ -24,7 +24,7 @@ final class GetGifByIdTest extends TestCase
             username: 'cat-user',
         );
 
-        $provider = new FakeGifProvider();
+        $provider = new FakeGifProvider;
         $provider->willReturnGifById($expectedGif);
 
         $useCase = new GetGifById($provider);
@@ -48,7 +48,7 @@ final class GetGifByIdTest extends TestCase
             originalUrl: 'https://example.com/original.gif',
         );
 
-        $provider = new FakeGifProvider();
+        $provider = new FakeGifProvider;
         $provider->willReturnGifById($expectedGif);
 
         $useCase = new GetGifById($provider);
@@ -65,7 +65,7 @@ final class GetGifByIdTest extends TestCase
 
     public function test_it_throws_when_the_gif_does_not_exist(): void
     {
-        $provider = new FakeGifProvider();
+        $provider = new FakeGifProvider;
         $provider->willReturnGifById(null);
 
         $useCase = new GetGifById($provider);

@@ -1,0 +1,565 @@
+{
+    "info": {
+        "_postman_id": "ef731bb1-339e-4c55-853f-c9eeb1d90b53",
+        "name": "Prex Giphy API",
+        "description": "Colección para probar la API REST del challenge PHP Hexagonal.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:8080",
+            "type": "string"
+        },
+        {
+            "key": "email",
+            "value": "challenge@example.com",
+            "type": "string"
+        },
+        {
+            "key": "password",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "access_token",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "expires_at",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "user_id",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "search_query",
+            "value": "metalcore",
+            "type": "string"
+        },
+        {
+            "key": "limit",
+            "value": "2",
+            "type": "string"
+        },
+        {
+            "key": "offset",
+            "value": "0",
+            "type": "string"
+        },
+        {
+            "key": "gif_id",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "favorite_alias",
+            "value": "Mi GIF favorito",
+            "type": "string"
+        },
+        {
+            "key": "favorite_id",
+            "value": "",
+            "type": "string"
+        }
+    ],
+    "item": [
+        {
+            "name": "Authentication",
+            "item": [
+                {
+                    "name": "Login",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status code is 200', () => {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "const payload = pm.response.json();",
+                                    "",
+                                    "pm.test('Response contains an access token', () => {",
+                                    "    pm.expect(payload.data.access_token).to.be.a('string').and.not.empty;",
+                                    "    pm.expect(payload.data.token_type).to.eql('Bearer');",
+                                    "    pm.expect(payload.data.expires_in).to.eql(1800);",
+                                    "});",
+                                    "",
+                                    "const setVariable = (key, value) => {",
+                                    "    const normalizedValue = String(value);",
+                                    "",
+                                    "    pm.collectionVariables.set(key, normalizedValue);",
+                                    "",
+                                    "    if (pm.environment && pm.environment.name) {",
+                                    "        pm.environment.set(key, normalizedValue);",
+                                    "    }",
+                                    "};",
+                                    "",
+                                    "setVariable('access_token', payload.data.access_token);",
+                                    "setVariable('user_id', payload.data.user.id);",
+                                    "setVariable('expires_at', payload.data.expires_at);"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/login",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "login"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "GIFs",
+            "item": [
+                {
+                    "name": "Search GIFs",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "const setVariable = (key, value) => {",
+                                    "    const normalizedValue = String(value);",
+                                    "",
+                                    "    pm.collectionVariables.set(key, normalizedValue);",
+                                    "",
+                                    "    if (pm.environment && pm.environment.name) {",
+                                    "        pm.environment.set(key, normalizedValue);",
+                                    "    }",
+                                    "};",
+                                    "",
+                                    "const setAuthorizationHeader = (token) => {",
+                                    "    pm.request.headers.upsert({",
+                                    "        key: 'Authorization',",
+                                    "        value: `Bearer ${token}`,",
+                                    "    });",
+                                    "};",
+                                    "",
+                                    "const currentToken = pm.variables.get('access_token');",
+                                    "",
+                                    "if (currentToken) {",
+                                    "    setAuthorizationHeader(currentToken);",
+                                    "} else {",
+                                    "    const baseUrl = pm.variables.get('base_url');",
+                                    "    const email = pm.variables.get('email');",
+                                    "    const password = pm.variables.get('password');",
+                                    "",
+                                    "    if (!baseUrl || !email || !password) {",
+                                    "        throw new Error('Complete base_url, email and password before calling this protected endpoint.');",
+                                    "    }",
+                                    "",
+                                    "    pm.sendRequest({",
+                                    "        url: `${baseUrl}/api/login`,",
+                                    "        method: 'POST',",
+                                    "        header: {",
+                                    "            Accept: 'application/json',",
+                                    "            'Content-Type': 'application/json',",
+                                    "        },",
+                                    "        body: {",
+                                    "            mode: 'raw',",
+                                    "            raw: JSON.stringify({ email, password }),",
+                                    "        },",
+                                    "    }, (error, response) => {",
+                                    "        if (error) {",
+                                    "            throw new Error(`Auto-login failed: ${error.message || error}`);",
+                                    "        }",
+                                    "",
+                                    "        if (response.code !== 200) {",
+                                    "            throw new Error(`Auto-login failed with HTTP ${response.code}. Check email and password.`);",
+                                    "        }",
+                                    "",
+                                    "        const payload = response.json();",
+                                    "",
+                                    "        if (!payload.data || !payload.data.access_token) {",
+                                    "            throw new Error('Auto-login response did not include data.access_token.');",
+                                    "        }",
+                                    "",
+                                    "        setVariable('access_token', payload.data.access_token);",
+                                    "        setVariable('user_id', payload.data.user.id);",
+                                    "        setVariable('expires_at', payload.data.expires_at);",
+                                    "        setAuthorizationHeader(payload.data.access_token);",
+                                    "    });",
+                                    "}"
+                                ]
+                            }
+                        },
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status code is 200', () => {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "const payload = pm.response.json();",
+                                    "",
+                                    "pm.test('Response has a GIF collection', () => {",
+                                    "    pm.expect(payload.data).to.be.an('array');",
+                                    "    pm.expect(payload.meta).to.have.keys('query', 'limit', 'offset', 'count');",
+                                    "});",
+                                    "",
+                                    "const setVariable = (key, value) => {",
+                                    "    const normalizedValue = String(value);",
+                                    "",
+                                    "    pm.collectionVariables.set(key, normalizedValue);",
+                                    "",
+                                    "    if (pm.environment && pm.environment.name) {",
+                                    "        pm.environment.set(key, normalizedValue);",
+                                    "    }",
+                                    "};",
+                                    "",
+                                    "if (payload.data.length > 0) {",
+                                    "    setVariable('gif_id', payload.data[0].id);",
+                                    "}"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/gifs?query={{search_query}}&limit={{limit}}&offset={{offset}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "gifs"
+                            ],
+                            "query": [
+                                {
+                                    "key": "query",
+                                    "value": "{{search_query}}"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "{{limit}}"
+                                },
+                                {
+                                    "key": "offset",
+                                    "value": "{{offset}}"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Find GIF by ID",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "if (!pm.variables.get('gif_id')) {",
+                                    "    throw new Error('Run the Search GIFs request before finding a GIF by ID.');",
+                                    "}",
+                                    "",
+                                    "const setVariable = (key, value) => {",
+                                    "    const normalizedValue = String(value);",
+                                    "",
+                                    "    pm.collectionVariables.set(key, normalizedValue);",
+                                    "",
+                                    "    if (pm.environment && pm.environment.name) {",
+                                    "        pm.environment.set(key, normalizedValue);",
+                                    "    }",
+                                    "};",
+                                    "",
+                                    "const setAuthorizationHeader = (token) => {",
+                                    "    pm.request.headers.upsert({",
+                                    "        key: 'Authorization',",
+                                    "        value: `Bearer ${token}`,",
+                                    "    });",
+                                    "};",
+                                    "",
+                                    "const currentToken = pm.variables.get('access_token');",
+                                    "",
+                                    "if (currentToken) {",
+                                    "    setAuthorizationHeader(currentToken);",
+                                    "} else {",
+                                    "    const baseUrl = pm.variables.get('base_url');",
+                                    "    const email = pm.variables.get('email');",
+                                    "    const password = pm.variables.get('password');",
+                                    "",
+                                    "    if (!baseUrl || !email || !password) {",
+                                    "        throw new Error('Complete base_url, email and password before calling this protected endpoint.');",
+                                    "    }",
+                                    "",
+                                    "    pm.sendRequest({",
+                                    "        url: `${baseUrl}/api/login`,",
+                                    "        method: 'POST',",
+                                    "        header: {",
+                                    "            Accept: 'application/json',",
+                                    "            'Content-Type': 'application/json',",
+                                    "        },",
+                                    "        body: {",
+                                    "            mode: 'raw',",
+                                    "            raw: JSON.stringify({ email, password }),",
+                                    "        },",
+                                    "    }, (error, response) => {",
+                                    "        if (error) {",
+                                    "            throw new Error(`Auto-login failed: ${error.message || error}`);",
+                                    "        }",
+                                    "",
+                                    "        if (response.code !== 200) {",
+                                    "            throw new Error(`Auto-login failed with HTTP ${response.code}. Check email and password.`);",
+                                    "        }",
+                                    "",
+                                    "        const payload = response.json();",
+                                    "",
+                                    "        if (!payload.data || !payload.data.access_token) {",
+                                    "            throw new Error('Auto-login response did not include data.access_token.');",
+                                    "        }",
+                                    "",
+                                    "        setVariable('access_token', payload.data.access_token);",
+                                    "        setVariable('user_id', payload.data.user.id);",
+                                    "        setVariable('expires_at', payload.data.expires_at);",
+                                    "        setAuthorizationHeader(payload.data.access_token);",
+                                    "    });",
+                                    "}"
+                                ]
+                            }
+                        },
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status code is 200', () => {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "const payload = pm.response.json();",
+                                    "",
+                                    "pm.test('The requested GIF is returned', () => {",
+                                    "    pm.expect(payload.data.id).to.eql(pm.variables.get('gif_id'));",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/gifs/{{gif_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "gifs",
+                                "{{gif_id}}"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Favorites",
+            "item": [
+                {
+                    "name": "Save Favorite GIF",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "if (!pm.variables.get('gif_id')) {",
+                                    "    throw new Error('Run the Search GIFs request before saving a favorite GIF.');",
+                                    "}",
+                                    "",
+                                    "const setVariable = (key, value) => {",
+                                    "    const normalizedValue = String(value);",
+                                    "",
+                                    "    pm.collectionVariables.set(key, normalizedValue);",
+                                    "",
+                                    "    if (pm.environment && pm.environment.name) {",
+                                    "        pm.environment.set(key, normalizedValue);",
+                                    "    }",
+                                    "};",
+                                    "",
+                                    "const setAuthorizationHeader = (token) => {",
+                                    "    pm.request.headers.upsert({",
+                                    "        key: 'Authorization',",
+                                    "        value: `Bearer ${token}`,",
+                                    "    });",
+                                    "};",
+                                    "",
+                                    "const setFavoriteBody = (userId) => {",
+                                    "    pm.request.body.update(JSON.stringify({",
+                                    "        gif_id: pm.variables.get('gif_id'),",
+                                    "        alias: pm.variables.get('favorite_alias'),",
+                                    "        user_id: Number(userId),",
+                                    "    }, null, 4));",
+                                    "};",
+                                    "",
+                                    "const currentToken = pm.variables.get('access_token');",
+                                    "const currentUserId = pm.variables.get('user_id');",
+                                    "",
+                                    "if (currentToken && currentUserId) {",
+                                    "    setAuthorizationHeader(currentToken);",
+                                    "    setFavoriteBody(currentUserId);",
+                                    "} else {",
+                                    "    const baseUrl = pm.variables.get('base_url');",
+                                    "    const email = pm.variables.get('email');",
+                                    "    const password = pm.variables.get('password');",
+                                    "",
+                                    "    if (!baseUrl || !email || !password) {",
+                                    "        throw new Error('Complete base_url, email and password before calling this protected endpoint.');",
+                                    "    }",
+                                    "",
+                                    "    pm.sendRequest({",
+                                    "        url: `${baseUrl}/api/login`,",
+                                    "        method: 'POST',",
+                                    "        header: {",
+                                    "            Accept: 'application/json',",
+                                    "            'Content-Type': 'application/json',",
+                                    "        },",
+                                    "        body: {",
+                                    "            mode: 'raw',",
+                                    "            raw: JSON.stringify({ email, password }),",
+                                    "        },",
+                                    "    }, (error, response) => {",
+                                    "        if (error) {",
+                                    "            throw new Error(`Auto-login failed: ${error.message || error}`);",
+                                    "        }",
+                                    "",
+                                    "        if (response.code !== 200) {",
+                                    "            throw new Error(`Auto-login failed with HTTP ${response.code}. Check email and password.`);",
+                                    "        }",
+                                    "",
+                                    "        const payload = response.json();",
+                                    "",
+                                    "        if (!payload.data || !payload.data.access_token) {",
+                                    "            throw new Error('Auto-login response did not include data.access_token.');",
+                                    "        }",
+                                    "",
+                                    "        setVariable('access_token', payload.data.access_token);",
+                                    "        setVariable('user_id', payload.data.user.id);",
+                                    "        setVariable('expires_at', payload.data.expires_at);",
+                                    "        setAuthorizationHeader(payload.data.access_token);",
+                                    "        setFavoriteBody(payload.data.user.id);",
+                                    "    });",
+                                    "}"
+                                ]
+                            }
+                        },
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status code is 201', () => {",
+                                    "    pm.response.to.have.status(201);",
+                                    "});",
+                                    "",
+                                    "const payload = pm.response.json();",
+                                    "",
+                                    "pm.test('Favorite was persisted', () => {",
+                                    "    pm.expect(payload.data.gif_id).to.eql(pm.variables.get('gif_id'));",
+                                    "    pm.expect(String(payload.data.user_id)).to.eql(pm.variables.get('user_id'));",
+                                    "});",
+                                    "",
+                                    "const setVariable = (key, value) => {",
+                                    "    const normalizedValue = String(value);",
+                                    "",
+                                    "    pm.collectionVariables.set(key, normalizedValue);",
+                                    "",
+                                    "    if (pm.environment && pm.environment.name) {",
+                                    "        pm.environment.set(key, normalizedValue);",
+                                    "    }",
+                                    "};",
+                                    "",
+                                    "setVariable('favorite_id', payload.data.id);"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"gif_id\": \"{{gif_id}}\",\n    \"alias\": \"{{favorite_alias}}\",\n    \"user_id\": {{user_id}}\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/favorites",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "favorites"
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

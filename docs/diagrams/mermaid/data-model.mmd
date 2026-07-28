@@ -1,0 +1,99 @@
+erDiagram
+    USERS {
+        BIGINT id PK
+        VARCHAR_255 name
+        VARCHAR_255 email UK
+        VARCHAR_255 password
+        TIMESTAMP_NULL email_verified_at
+        VARCHAR_100 remember_token
+        TIMESTAMP created_at
+        TIMESTAMP updated_at
+    }
+
+    FAVORITE_GIFS {
+        BIGINT id PK
+        BIGINT user_id FK
+        VARCHAR_100 gif_id
+        VARCHAR_100 alias
+        TIMESTAMP created_at
+        TIMESTAMP updated_at
+        UNIQUE user_gif_unique
+    }
+
+    API_INTERACTION_LOGS {
+        BIGINT id PK
+        BIGINT user_id FK
+        VARCHAR_150 service
+        VARCHAR_10 http_method
+        VARCHAR_2048 path
+        JSON_NULL request_body
+        SMALLINT response_status
+        JSON_NULL response_body
+        VARCHAR_45 origin_ip
+        INT duration_ms
+        TIMESTAMP created_at
+    }
+
+    OAUTH_CLIENTS {
+        UUID id PK
+        VARCHAR_255 owner_type
+        UUID owner_id
+        VARCHAR_255 name
+        VARCHAR_255 secret
+        VARCHAR_255 provider
+        TEXT redirect_uris
+        TEXT grant_types
+        BOOLEAN revoked
+        TIMESTAMP created_at
+        TIMESTAMP updated_at
+    }
+
+    OAUTH_AUTH_CODES {
+        CHAR_80 id PK
+        BIGINT user_id
+        UUID client_id
+        TEXT scopes
+        BOOLEAN revoked
+        DATETIME expires_at
+    }
+
+    OAUTH_ACCESS_TOKENS {
+        CHAR_80 id PK
+        BIGINT user_id
+        UUID client_id
+        VARCHAR_255 name
+        TEXT scopes
+        BOOLEAN revoked
+        TIMESTAMP created_at
+        TIMESTAMP updated_at
+        DATETIME expires_at
+    }
+
+    OAUTH_REFRESH_TOKENS {
+        CHAR_80 id PK
+        CHAR_80 access_token_id
+        BOOLEAN revoked
+        DATETIME expires_at
+    }
+
+    OAUTH_DEVICE_CODES {
+        CHAR_80 id PK
+        BIGINT user_id
+        UUID client_id
+        CHAR_8 user_code UK
+        TEXT scopes
+        BOOLEAN revoked
+        DATETIME user_approved_at
+        DATETIME last_polled_at
+        DATETIME expires_at
+    }
+
+    USERS ||--o{ FAVORITE_GIFS : owns
+    USERS |o--o{ API_INTERACTION_LOGS : performs
+    USERS |o--o{ OAUTH_AUTH_CODES : authorizes
+    USERS |o--o{ OAUTH_ACCESS_TOKENS : receives
+    USERS |o--o{ OAUTH_DEVICE_CODES : approves
+    OAUTH_CLIENTS ||--o{ OAUTH_AUTH_CODES : issues
+    OAUTH_CLIENTS ||--o{ OAUTH_ACCESS_TOKENS : issues
+    OAUTH_CLIENTS ||--o{ OAUTH_DEVICE_CODES : issues
+    OAUTH_ACCESS_TOKENS ||--o{ OAUTH_REFRESH_TOKENS : refreshes

@@ -1,0 +1,56 @@
+sequenceDiagram
+    actor Client as Consumer
+    participant AuditMW as Audit middleware
+    participant AuthMW as Passport auth:api
+    participant Request as GetGifByIdRequest
+    participant Controller as GetGifByIdController
+    participant UseCase as GetGifById
+    participant Port as GifProvider
+    participant Adapter as GiphyApiAdapter
+    participant Giphy as GIPHY API
+    participant Mapper as GiphyGifMapper
+    participant Resource as GifResource
+    participant Handler as Exception handler
+    participant Audit as RecordApiInteraction
+    participant AuditDB as api_interaction_logs
+
+    Client->>AuditMW: GET /api/gifs/{id} with Bearer token
+    AuditMW->>AuthMW: Validate access token
+
+    alt Not authenticated
+        AuthMW-->>Handler: AuthenticationException
+        Handler-->>Client: 401 UNAUTHENTICATED
+    else Authenticated
+        AuthMW->>Request: Validate route id
+        alt Invalid id
+            Request-->>Handler: ValidationException
+            Handler-->>Client: 422 VALIDATION_ERROR
+        else Valid id
+            Request->>Controller: Validated id
+            Controller->>UseCase: execute(GetGifByIdInput)
+            UseCase->>Port: getById(id)
+            Port->>Adapter: Bound implementation
+            Adapter->>Giphy: GET /v1/gifs/{id}
+            alt GIF not found
+                Giphy-->>Adapter: 404 or empty data
+                Adapter-->>UseCase: null
+                UseCase-->>Handler: GifNotFoundException
+                Handler-->>Client: 404 GIF_NOT_FOUND
+            else Provider failure
+                Giphy-->>Adapter: Error or timeout
+                Adapter-->>Handler: GifProviderException
+                Handler-->>Client: 502 GIF_PROVIDER_UNAVAILABLE
+            else GIF found
+                Giphy-->>Adapter: JSON payload
+                Adapter->>Mapper: fromArray(data)
+                Mapper-->>Adapter: Gif
+                Adapter-->>UseCase: Gif
+                UseCase-->>Controller: Gif
+                Controller->>Resource: Transform entity
+                Resource-->>Client: 200 GIF data
+            end
+        end
+    end
+
+    AuditMW->>Audit: Record interaction
+    Audit->>AuditDB: INSERT interaction

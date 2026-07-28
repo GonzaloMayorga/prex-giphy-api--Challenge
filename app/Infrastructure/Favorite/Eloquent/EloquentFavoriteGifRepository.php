@@ -12,8 +12,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Illuminate\Database\QueryException;
 
-final class EloquentFavoriteGifRepository implements
-    FavoriteGifRepository
+final class EloquentFavoriteGifRepository implements FavoriteGifRepository
 {
     public function existsForUser(
         int $userId,
@@ -61,13 +60,13 @@ final class EloquentFavoriteGifRepository implements
             'updated_at'
         );
 
-        if (!$createdAt instanceof DateTimeInterface) {
+        if (! $createdAt instanceof DateTimeInterface) {
             throw FavoriteGifRepositoryException::invalidStoredData(
                 'created_at is not a valid date.'
             );
         }
 
-        if (!$updatedAt instanceof DateTimeInterface) {
+        if (! $updatedAt instanceof DateTimeInterface) {
             throw FavoriteGifRepositoryException::invalidStoredData(
                 'updated_at is not a valid date.'
             );
@@ -120,5 +119,3 @@ final class EloquentFavoriteGifRepository implements
             );
     }
 }
-
-?>

@@ -55,5 +55,3 @@ final class SensitiveDataRedactorTest extends TestCase
         ], $result);
     }
 }
-
-?>

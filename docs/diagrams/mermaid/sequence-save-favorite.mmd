@@ -1,0 +1,75 @@
+sequenceDiagram
+    actor Client as Consumer
+    participant AuditMW as Audit middleware
+    participant AuthMW as Passport auth:api
+    participant Request as SaveFavoriteGifRequest
+    participant Controller as SaveFavoriteGifController
+    participant UseCase as SaveFavoriteGif
+    participant Repo as FavoriteGifRepository
+    participant Favorites as favorite_gifs table
+    participant GifPort as GifProvider
+    participant Adapter as GiphyApiAdapter
+    participant Giphy as GIPHY API
+    participant Resource as FavoriteGifResource
+    participant Handler as Exception handler
+    participant Audit as RecordApiInteraction
+    participant AuditDB as api_interaction_logs
+
+    Client->>AuditMW: POST /api/favorites with Bearer token and body
+    AuditMW->>AuthMW: Validate access token
+
+    alt Not authenticated
+        AuthMW-->>Handler: AuthenticationException
+        Handler-->>Client: 401 UNAUTHENTICATED
+    else Authenticated
+        AuthMW->>Request: Validate gif_id, alias, user_id
+        alt Invalid body
+            Request-->>Handler: ValidationException
+            Handler-->>Client: 422 VALIDATION_ERROR
+        else Valid body
+            Request->>Controller: Validated data and authenticated user
+            Controller->>UseCase: execute(SaveFavoriteGifInput)
+            alt user_id does not match
+                UseCase-->>Handler: FavoriteGifOwnershipException
+                Handler-->>Client: 403 FAVORITE_USER_FORBIDDEN
+            else Same user
+                UseCase->>Repo: existsForUser(userId, gifId)
+                Repo->>Favorites: SELECT EXISTS
+                Favorites-->>Repo: true or false
+                alt Already saved
+                    Repo-->>UseCase: true
+                    UseCase-->>Handler: FavoriteGifAlreadyExistsException
+                    Handler-->>Client: 409 FAVORITE_GIF_ALREADY_EXISTS
+                else Not saved
+                    Repo-->>UseCase: false
+                    UseCase->>GifPort: getById(gifId)
+                    GifPort->>Adapter: Bound implementation
+                    Adapter->>Giphy: GET /v1/gifs/{id}
+                    alt GIF not found
+                        Giphy-->>Adapter: 404 or empty data
+                        Adapter-->>UseCase: null
+                        UseCase-->>Handler: GifNotFoundException
+                        Handler-->>Client: 404 GIF_NOT_FOUND
+                    else Provider failure
+                        Giphy-->>Adapter: Error or timeout
+                        Adapter-->>Handler: GifProviderException
+                        Handler-->>Client: 502 GIF_PROVIDER_UNAVAILABLE
+                    else GIF exists
+                        Giphy-->>Adapter: JSON payload
+                        Adapter-->>UseCase: Gif
+                        UseCase->>UseCase: FavoriteGif::create()
+                        UseCase->>Repo: save(FavoriteGif)
+                        Repo->>Favorites: INSERT
+                        Favorites-->>Repo: Persisted row
+                        Repo-->>UseCase: FavoriteGif
+                        UseCase-->>Controller: FavoriteGif
+                        Controller->>Resource: Transform entity
+                        Resource-->>Client: 201 Created
+                    end
+                end
+            end
+        end
+    end
+
+    AuditMW->>Audit: Record interaction
+    Audit->>AuditDB: INSERT interaction

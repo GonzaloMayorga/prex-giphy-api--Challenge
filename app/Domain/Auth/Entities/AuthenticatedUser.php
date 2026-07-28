@@ -52,5 +52,3 @@ final readonly class AuthenticatedUser
         return $this->email;
     }
 }
-
-?>

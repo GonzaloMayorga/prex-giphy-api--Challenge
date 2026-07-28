@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Infrastructure\Http\Auth;
 
+use App\Domain\Favorite\Ports\FavoriteGifRepository;
 use App\Domain\Gif\Ports\GifProvider;
+use Tests\Fakes\Favorite\FakeFavoriteGifRepository;
 use Tests\Fakes\Gif\FakeGifProvider;
 use Tests\TestCase;
 
@@ -12,7 +14,7 @@ final class ProtectedEndpointsTest extends TestCase
 {
     public function test_search_requires_authentication(): void
     {
-        $provider = new FakeGifProvider();
+        $provider = new FakeGifProvider;
 
         $this->app->instance(
             GifProvider::class,
@@ -39,7 +41,7 @@ final class ProtectedEndpointsTest extends TestCase
 
     public function test_find_by_id_requires_authentication(): void
     {
-        $provider = new FakeGifProvider();
+        $provider = new FakeGifProvider;
 
         $this->app->instance(
             GifProvider::class,
@@ -64,8 +66,8 @@ final class ProtectedEndpointsTest extends TestCase
 
     public function test_saving_a_favorite_requires_authentication(): void
     {
-        $provider = new FakeGifProvider();
-        $repository = new \Tests\Fakes\Favorite\FakeFavoriteGifRepository();
+        $provider = new FakeGifProvider;
+        $repository = new FakeFavoriteGifRepository;
 
         $this->app->instance(
             GifProvider::class,
@@ -73,7 +75,7 @@ final class ProtectedEndpointsTest extends TestCase
         );
 
         $this->app->instance(
-            \App\Domain\Favorite\Ports\FavoriteGifRepository::class,
+            FavoriteGifRepository::class,
             $repository,
         );
 
@@ -102,5 +104,3 @@ final class ProtectedEndpointsTest extends TestCase
         );
     }
 }
-
-?>

@@ -8,15 +8,16 @@ use App\Domain\Favorite\Entities\FavoriteGif;
 use App\Domain\Favorite\Ports\FavoriteGifRepository;
 use LogicException;
 
-final class FakeFavoriteGifRepository implements
-    FavoriteGifRepository
+final class FakeFavoriteGifRepository implements FavoriteGifRepository
 {
     private bool $exists = false;
 
     private ?FavoriteGif $saveResult = null;
 
     public ?int $receivedExistsUserId = null;
+
     public ?string $receivedExistsGifId = null;
+
     public ?FavoriteGif $receivedFavorite = null;
 
     public function willReportExisting(
@@ -55,5 +56,3 @@ final class FakeFavoriteGifRepository implements
         return $this->saveResult;
     }
 }
-
-?>

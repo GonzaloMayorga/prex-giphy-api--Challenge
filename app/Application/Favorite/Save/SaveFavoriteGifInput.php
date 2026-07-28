@@ -10,8 +10,11 @@ use InvalidArgumentException;
 final readonly class SaveFavoriteGifInput
 {
     public int $authenticatedUserId;
+
     public int $requestedUserId;
+
     public string $gifId;
+
     public string $alias;
 
     public function __construct(
@@ -40,7 +43,7 @@ final readonly class SaveFavoriteGifInput
             trim($alias),
         );
 
-        if (!is_string($normalizedAlias)) {
+        if (! is_string($normalizedAlias)) {
             $normalizedAlias = trim($alias);
         }
 
@@ -86,5 +89,3 @@ final readonly class SaveFavoriteGifInput
         $this->alias = $normalizedAlias;
     }
 }
-
-?>

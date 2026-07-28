@@ -21,5 +21,3 @@ final class FavoriteGifAlreadyExistsException extends RuntimeException
         );
     }
 }
-
-?>
